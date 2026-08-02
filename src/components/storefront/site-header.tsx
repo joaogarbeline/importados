@@ -23,20 +23,27 @@ export async function SiteHeader() {
   const user = await getCurrentUser();
 
   return (
-    <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/80">
-      <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between gap-4 px-4">
-        <Link href="/" className="font-heading text-sm font-semibold">
-          Triade <span className="text-muted-foreground">Sistemas e Importados</span>
+    <header className="sticky top-0 z-40 border-b border-white/10 bg-background/80 backdrop-blur-md supports-backdrop-filter:bg-background/60">
+      <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-4">
+        <Link href="/" className="flex items-center gap-2.5">
+          <span className="glow-primary flex size-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/60 text-sm font-bold text-primary-foreground">
+            T
+          </span>
+          <span className="font-heading text-sm font-semibold">
+            Triade{" "}
+            <span className="text-muted-foreground">Sistemas e Importados</span>
+          </span>
         </Link>
 
-        <nav className="hidden items-center gap-4 text-sm font-medium sm:flex">
+        <nav className="hidden items-center gap-6 text-sm font-medium sm:flex">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="text-muted-foreground transition-colors hover:text-foreground"
+              className="group relative py-1 text-muted-foreground transition-colors hover:text-foreground"
             >
               {link.label}
+              <span className="absolute inset-x-0 -bottom-0.5 h-px origin-left scale-x-0 bg-primary transition-transform duration-300 group-hover:scale-x-100" />
             </Link>
           ))}
         </nav>
@@ -73,7 +80,10 @@ export async function SiteHeader() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Link href="/login" className={cn(buttonVariants({ variant: "outline" }))}>
+            <Link
+              href="/login"
+              className={cn(buttonVariants({ variant: "outline" }))}
+            >
               Entrar
             </Link>
           )}

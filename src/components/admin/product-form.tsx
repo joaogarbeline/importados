@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { ImageUploadField } from "@/components/admin/image-upload-field";
 import type { ProductFormState } from "@/app/admin/produtos/actions";
 
 type ProductDefaults = {
@@ -123,16 +124,11 @@ export function ProductForm({
         </p>
       </div>
 
-      <div className="flex flex-col gap-1.5">
-        <Label htmlFor="images">Imagens (uma URL por linha)</Label>
-        <Textarea
-          id="images"
-          name="images"
-          rows={3}
-          defaultValue={defaultValues?.images?.join("\n")}
-          placeholder="https://exemplo.com/produto-1.jpg"
-        />
-      </div>
+      <ImageUploadField
+        name="images"
+        label="Imagens do produto"
+        defaultValue={defaultValues?.images}
+      />
 
       <div className="flex flex-wrap gap-6">
         <label className="flex items-center gap-2 text-sm">

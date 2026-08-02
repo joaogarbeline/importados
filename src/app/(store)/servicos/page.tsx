@@ -3,6 +3,8 @@ import { formatBRL } from "@/lib/money";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ServiceRequestDialog } from "@/components/storefront/service-request-dialog";
+import { Reveal } from "@/components/motion/reveal";
+import { TiltCard } from "@/components/motion/tilt-card";
 
 const COMPLEXITY_LABEL: Record<string, string> = {
   SIMPLES: "Simples",
@@ -36,33 +38,39 @@ export default async function ServicosPage() {
           <ServiceRequestDialog />
         </div>
       ) : (
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {services.map((service) => (
-            <Card key={service.id} className="flex flex-col gap-3 p-5">
-              <div className="flex items-start justify-between gap-2">
-                <h2 className="font-heading font-semibold">{service.name}</h2>
-                <Badge variant="outline">
-                  {COMPLEXITY_LABEL[service.complexity] ?? service.complexity}
-                </Badge>
-              </div>
-              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                {service.category}
-              </p>
-              <p className="line-clamp-4 text-sm text-muted-foreground">
-                {service.description}
-              </p>
-              <div className="mt-auto flex flex-col gap-3">
-                <p className="font-semibold">
-                  {service.priceType === "FIXO" && service.price
-                    ? formatBRL(service.price)
-                    : "Sob orçamento"}
-                </p>
-                <ServiceRequestDialog
-                  serviceId={service.id}
-                  serviceName={service.name}
-                />
-              </div>
-            </Card>
+        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {services.map((service, i) => (
+            <Reveal key={service.id} delay={(i % 6) * 0.06}>
+              <TiltCard>
+                <Card className="flex h-full flex-col gap-3 p-5 transition-shadow hover:shadow-xl hover:shadow-primary/10">
+                  <div className="flex items-start justify-between gap-2">
+                    <h2 className="font-heading font-semibold">
+                      {service.name}
+                    </h2>
+                    <Badge variant="outline">
+                      {COMPLEXITY_LABEL[service.complexity] ?? service.complexity}
+                    </Badge>
+                  </div>
+                  <p className="text-xs font-medium uppercase tracking-wide text-primary">
+                    {service.category}
+                  </p>
+                  <p className="line-clamp-4 text-sm text-muted-foreground">
+                    {service.description}
+                  </p>
+                  <div className="mt-auto flex flex-col gap-3">
+                    <p className="font-semibold">
+                      {service.priceType === "FIXO" && service.price
+                        ? formatBRL(service.price)
+                        : "Sob orçamento"}
+                    </p>
+                    <ServiceRequestDialog
+                      serviceId={service.id}
+                      serviceName={service.name}
+                    />
+                  </div>
+                </Card>
+              </TiltCard>
+            </Reveal>
           ))}
         </div>
       )}

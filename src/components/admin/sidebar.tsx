@@ -11,6 +11,7 @@ import {
   Package,
   Boxes,
   Wrench,
+  Images,
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -21,6 +22,7 @@ const NAV_ITEMS = [
   { href: "/admin/produtos", label: "Produtos", icon: Package },
   { href: "/admin/estoque", label: "Estoque", icon: Boxes },
   { href: "/admin/servicos", label: "Serviços", icon: Wrench },
+  { href: "/admin/banners", label: "Banners", icon: Images },
 ];
 
 export function AdminSidebar() {
