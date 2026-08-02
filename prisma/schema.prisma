@@ -1,0 +1,238 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  CUSTOMER
+}
+
+enum OrderStatus {
+  AGUARDANDO_ESTOQUE
+  LIBERADO_PARA_PAGAMENTO
+  AGUARDANDO_PAGAMENTO
+  PAGO
+  EM_PREPARACAO
+  ENVIADO
+  ENTREGUE
+  CANCELADO
+  PAGAMENTO_EXPIRADO
+}
+
+enum ServicePriceType {
+  FIXO
+  ORCAMENTO
+}
+
+enum ServiceComplexity {
+  SIMPLES
+  MEDIA
+  COMPLEXA
+}
+
+enum ServiceRequestStatus {
+  NOVO
+  EM_ANALISE
+  ORCADO
+  APROVADO
+  RECUSADO
+  CONCLUIDO
+}
+
+enum EmailType {
+  PEDIDO_CRIADO
+  PAGAMENTO_LIBERADO
+  PAGAMENTO_CONFIRMADO
+  PEDIDO_ENVIADO
+  PEDIDO_CANCELADO
+  ORCAMENTO_RECEBIDO
+}
+
+enum PaymentStatus {
+  PENDENTE
+  APROVADO
+  RECUSADO
+  CANCELADO
+  ESTORNADO
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  phone        String?
+  role         Role     @default(CUSTOMER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  addresses       Address[]
+  orders          Order[]
+  serviceRequests ServiceRequest[]
+
+  @@index([role])
+}
+
+model Address {
+  id          String  @id @default(cuid())
+  userId      String
+  label       String  @default("Principal")
+  cep         String
+  rua         String
+  numero      String
+  complemento String?
+  bairro      String
+  cidade      String
+  uf          String
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orders Order[]
+
+  @@index([userId])
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String
+  images      String[]
+  price       Decimal  @db.Decimal(10, 2)
+  sku         String   @unique
+  stockQty    Int      @default(0)
+  isPreOrder  Boolean  @default(true)
+  category    String
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  orderItems     OrderItem[]
+  stockMovements StockMovement[]
+
+  @@index([category])
+  @@index([active])
+}
+
+model StockMovement {
+  id        String   @id @default(cuid())
+  productId String
+  qtyChange Int
+  reason    String
+  createdAt DateTime @default(now())
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+}
+
+model Service {
+  id          String            @id @default(cuid())
+  name        String
+  slug        String            @unique
+  description String
+  category    String
+  complexity  ServiceComplexity
+  priceType   ServicePriceType
+  price       Decimal?          @db.Decimal(10, 2)
+  active      Boolean           @default(true)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  requests ServiceRequest[]
+
+  @@index([active])
+}
+
+model ServiceRequest {
+  id        String               @id @default(cuid())
+  serviceId String?
+  userId    String?
+  nome      String
+  email     String
+  telefone  String?
+  descricao String
+  status    ServiceRequestStatus @default(NOVO)
+  createdAt DateTime             @default(now())
+  updatedAt DateTime             @updatedAt
+
+  service Service? @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  user    User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([status])
+}
+
+model Order {
+  id                String      @id @default(cuid())
+  userId            String
+  shippingAddressId String?
+  status            OrderStatus @default(AGUARDANDO_ESTOQUE)
+  subtotal          Decimal     @db.Decimal(10, 2)
+  total             Decimal     @db.Decimal(10, 2)
+  notes             String?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  releasedAt        DateTime?
+  paidAt            DateTime?
+
+  user            User        @relation(fields: [userId], references: [id])
+  shippingAddress Address?    @relation(fields: [shippingAddressId], references: [id])
+  items           OrderItem[]
+  payments        Payment[]
+  emailLogs       EmailLog[]
+
+  @@index([status])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id             String  @id @default(cuid())
+  orderId        String
+  productId      String
+  qty            Int
+  unitPrice      Decimal @db.Decimal(10, 2)
+  stockAllocated Boolean @default(false)
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
+  @@index([productId, stockAllocated])
+}
+
+model Payment {
+  id             String        @id @default(cuid())
+  orderId        String
+  mpPreferenceId String?
+  mpPaymentId    String?       @unique
+  initPoint      String?
+  status         PaymentStatus @default(PENDENTE)
+  method         String?
+  amount         Decimal       @db.Decimal(10, 2)
+  rawPayload     Json?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([status])
+}
+
+model EmailLog {
+  id       String    @id @default(cuid())
+  orderId  String?
+  type     EmailType
+  toEmail  String
+  resendId String?
+  sentAt   DateTime  @default(now())
+
+  order Order? @relation(fields: [orderId], references: [id], onDelete: SetNull)
+
+  @@index([orderId])
+}
