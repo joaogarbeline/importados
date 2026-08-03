@@ -14,10 +14,7 @@ import {
 import { cn } from "@/lib/utils";
 import { signOutAction } from "@/app/(store)/actions";
 
-const NAV_LINKS = [
-  { href: "/loja", label: "Loja" },
-  { href: "/servicos", label: "Serviços" },
-];
+const NAV_LINKS = [{ href: "/loja", label: "Loja" }];
 
 export async function SiteHeader() {
   const user = await getCurrentUser();

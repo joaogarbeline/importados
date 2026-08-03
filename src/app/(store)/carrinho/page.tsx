@@ -17,6 +17,9 @@ export default function CarrinhoPage() {
         <h1 className="font-heading text-2xl font-semibold">
           Seu carrinho está vazio
         </h1>
+        <p className="text-sm text-muted-foreground">
+          Que tal garantir seu produto antes que o estoque acabe?
+        </p>
         <Link href="/loja" className={cn(buttonVariants())}>
           Ver produtos
         </Link>
@@ -30,7 +33,10 @@ export default function CarrinhoPage() {
 
       <div className="mt-6 flex flex-col gap-4">
         {items.map((item) => (
-          <Card key={item.productId} className="flex-row items-center gap-4 p-4">
+          <Card
+            key={item.productId}
+            className="flex-col items-center gap-4 p-4 sm:flex-row"
+          >
             <div className="size-16 shrink-0 overflow-hidden rounded-lg bg-muted">
               {item.image ? (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -41,7 +47,7 @@ export default function CarrinhoPage() {
                 />
               ) : null}
             </div>
-            <div className="flex flex-1 flex-col gap-1">
+            <div className="flex w-full flex-1 flex-col gap-1">
               <div className="flex items-start justify-between gap-2">
                 <Link
                   href={`/loja/${item.slug}`}
@@ -88,13 +94,19 @@ export default function CarrinhoPage() {
         ))}
       </div>
 
-      <div className="mt-8 flex flex-col items-end gap-3 border-t pt-6">
+      <div className="mt-8 flex flex-col items-center gap-3 border-t pt-6 sm:items-end">
         <div className="text-lg font-semibold">
           Total: {formatBRL(totalPrice)}
         </div>
-        <Link href="/checkout" className={cn(buttonVariants({ size: "lg" }))}>
+        <Link
+          href="/checkout"
+          className={cn(buttonVariants({ size: "lg" }), "w-full sm:w-auto")}
+        >
           Finalizar compra
         </Link>
+        <p className="text-xs text-muted-foreground">
+          Pagamento seguro · você só paga quando o estoque chegar
+        </p>
       </div>
     </div>
   );

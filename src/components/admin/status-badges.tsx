@@ -1,8 +1,4 @@
-import type {
-  OrderStatus,
-  PaymentStatus,
-  ServiceRequestStatus,
-} from "@/generated/prisma/enums";
+import type { OrderStatus, PaymentStatus } from "@/generated/prisma/enums";
 import { cn } from "@/lib/utils";
 
 // Paleta de status (fixa, não-temática): good / warning / serious / critical.
@@ -88,42 +84,7 @@ export function PaymentStatusBadge({ status }: { status: PaymentStatus }) {
   return <Badge color={PAYMENT_STATUS_COLOR[status]} label={PAYMENT_STATUS_LABEL[status]} />;
 }
 
-const SERVICE_REQUEST_STATUS_LABEL: Record<ServiceRequestStatus, string> = {
-  NOVO: "Novo",
-  EM_ANALISE: "Em análise",
-  ORCADO: "Orçado",
-  APROVADO: "Aprovado",
-  RECUSADO: "Recusado",
-  CONCLUIDO: "Concluído",
-};
-
-const SERVICE_REQUEST_STATUS_COLOR: Record<ServiceRequestStatus, string> = {
-  NOVO: INFO,
-  EM_ANALISE: WARNING,
-  ORCADO: WARNING,
-  APROVADO: GOOD,
-  RECUSADO: CRITICAL,
-  CONCLUIDO: GOOD,
-};
-
-export function ServiceRequestStatusBadge({
-  status,
-}: {
-  status: ServiceRequestStatus;
-}) {
-  return (
-    <Badge
-      color={SERVICE_REQUEST_STATUS_COLOR[status]}
-      label={SERVICE_REQUEST_STATUS_LABEL[status]}
-    />
-  );
-}
-
 export const ORDER_STATUS_OPTIONS = Object.entries(ORDER_STATUS_LABEL) as [
   OrderStatus,
   string,
 ][];
-
-export const SERVICE_REQUEST_STATUS_OPTIONS = Object.entries(
-  SERVICE_REQUEST_STATUS_LABEL
-) as [ServiceRequestStatus, string][];

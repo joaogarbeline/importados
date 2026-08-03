@@ -2,10 +2,11 @@
 
 import { useActionState, useEffect, useState } from "react";
 import {
-  createServiceRequestAction,
-  type ServiceRequestState,
-} from "@/app/(store)/servicos/actions";
-import { Button } from "@/components/ui/button";
+  createCustomOrderRequestAction,
+  type CustomOrderState,
+} from "@/app/(store)/actions";
+import { Button, type buttonVariants } from "@/components/ui/button";
+import type { VariantProps } from "class-variance-authority";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -19,52 +20,54 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-const initialState: ServiceRequestState = undefined;
+const initialState: CustomOrderState = undefined;
 
-export function ServiceRequestDialog({
-  serviceId,
-  serviceName,
+export function CustomOrderDialog({
+  triggerLabel = "Fazer minha encomenda",
+  variant,
+  className,
 }: {
-  serviceId?: string;
-  serviceName?: string;
+  triggerLabel?: string;
+  variant?: VariantProps<typeof buttonVariants>["variant"];
+  className?: string;
 }) {
   const [open, setOpen] = useState(false);
   const [state, formAction, pending] = useActionState(
-    createServiceRequestAction,
+    createCustomOrderRequestAction,
     initialState
   );
 
   useEffect(() => {
-    if (state?.success) setOpen(false);
+    if (state?.success) {
+      const timer = setTimeout(() => setOpen(false), 2500);
+      return () => clearTimeout(timer);
+    }
   }, [state?.success]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger render={<Button variant="outline" className="w-full" />}>
-        Solicitar orçamento
+      <DialogTrigger
+        render={<Button size="lg" variant={variant} className={className} />}
+      >
+        {triggerLabel}
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Solicitar orçamento</DialogTitle>
+          <DialogTitle>Não achou o que procura? Não se preocupe!</DialogTitle>
           <DialogDescription>
-            {serviceName
-              ? `Conte mais sobre o que você precisa para "${serviceName}".`
-              : "Conte mais sobre o que você precisa e retornaremos em breve."}
+            Conte pra gente o produto que você quer e a gente traz sob
+            encomenda pra você.
           </DialogDescription>
         </DialogHeader>
 
         {state?.success ? (
           <Alert>
             <AlertDescription>
-              Solicitação enviada! Em breve entraremos em contato.
+              Recebemos sua encomenda! Em breve entramos em contato.
             </AlertDescription>
           </Alert>
         ) : (
           <form action={formAction} className="flex flex-col gap-3">
-            {serviceId && (
-              <input type="hidden" name="serviceId" value={serviceId} />
-            )}
-
             {state?.error && (
               <Alert variant="destructive">
                 <AlertDescription>{state.error}</AlertDescription>
@@ -72,23 +75,23 @@ export function ServiceRequestDialog({
             )}
 
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="nome">Nome</Label>
-              <Input id="nome" name="nome" required />
+              <Label htmlFor="name">Nome</Label>
+              <Input id="name" name="name" required />
             </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="email">E-mail</Label>
               <Input id="email" name="email" type="email" required />
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="telefone">Telefone (opcional)</Label>
-              <Input id="telefone" name="telefone" />
+              <Label htmlFor="phone">Telefone (opcional)</Label>
+              <Input id="phone" name="phone" />
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="descricao">O que você precisa?</Label>
-              <Textarea id="descricao" name="descricao" rows={4} required />
+              <Label htmlFor="description">O que você está procurando?</Label>
+              <Textarea id="description" name="description" rows={4} required />
             </div>
             <Button type="submit" disabled={pending}>
-              {pending ? "Enviando..." : "Enviar solicitação"}
+              {pending ? "Enviando..." : "Enviar encomenda"}
             </Button>
           </form>
         )}

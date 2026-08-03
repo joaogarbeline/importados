@@ -143,37 +143,36 @@ export async function sendOrderCancelledEmail(orderId: string) {
   });
 }
 
-export async function sendServiceRequestReceivedEmail(
-  serviceRequestId: string
-) {
-  const request = await prisma.serviceRequest.findUniqueOrThrow({
-    where: { id: serviceRequestId },
-    include: { service: true },
-  });
+export async function sendCustomOrderRequestEmail(input: {
+  name: string;
+  email: string;
+  phone?: string;
+  description: string;
+}) {
+  const adminEmail = EMAIL_FROM.replace(/.*<(.+)>/, "$1");
 
-  await sendEmail({
-    to: request.email,
-    type: "ORCAMENTO_RECEBIDO",
-    subject: "Recebemos sua solicitação de orçamento — Triade Sistemas e Importados",
+  await getResend().emails.send({
+    from: EMAIL_FROM,
+    to: input.email,
+    subject: "Recebemos sua encomenda — Triade Sistemas e Importados",
     html: `
-      <h2>Obrigado pelo contato, ${request.nome}!</h2>
-      <p>Recebemos sua solicitação${request.service ? ` para o serviço "${request.service.name}"` : ""} e nossa equipe vai analisar em breve.</p>
-      <p><em>${request.descricao}</em></p>
+      <h2>Obrigado, ${input.name}!</h2>
+      <p>Recebemos sua solicitação de encomenda e nossa equipe já vai analisar a disponibilidade e o prazo.</p>
+      <p><em>${input.description}</em></p>
       <p>Triade Sistemas e Importados</p>
     `,
   });
 
-  await sendEmail({
-    to: EMAIL_FROM.replace(/.*<(.+)>/, "$1"),
-    type: "ORCAMENTO_RECEBIDO",
-    subject: `Novo orçamento recebido de ${request.nome}`,
+  await getResend().emails.send({
+    from: EMAIL_FROM,
+    to: adminEmail,
+    subject: `Nova encomenda personalizada de ${input.name}`,
     html: `
-      <h2>Novo pedido de orçamento</h2>
-      <p><strong>Nome:</strong> ${request.nome}</p>
-      <p><strong>E-mail:</strong> ${request.email}</p>
-      <p><strong>Telefone:</strong> ${request.telefone ?? "-"}</p>
-      <p><strong>Serviço:</strong> ${request.service?.name ?? "Sob consulta"}</p>
-      <p><strong>Descrição:</strong> ${request.descricao}</p>
+      <h2>Nova solicitação de encomenda</h2>
+      <p><strong>Nome:</strong> ${input.name}</p>
+      <p><strong>E-mail:</strong> ${input.email}</p>
+      <p><strong>Telefone:</strong> ${input.phone ?? "-"}</p>
+      <p><strong>O que procura:</strong> ${input.description}</p>
     `,
   });
 }

@@ -32,27 +32,27 @@ async function main() {
       data: [
         {
           imageUrl:
-            "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1600&q=80&auto=format&fit=crop",
-          title: "Sistemas sob medida para o seu negócio",
+            "https://images.unsplash.com/photo-1580310614729-ccd69652491d?w=1600&q=80&auto=format&fit=crop",
+          title: "Motos elétricas importadas com garantia",
           subtitle:
-            "Da automação simples a plataformas completas — desenvolvimento sob medida.",
-          linkUrl: "/servicos",
+            "Economia, potência e estilo — garanta a sua sob encomenda antes que a próxima leva acabe.",
+          linkUrl: "/loja",
           order: 0,
         },
         {
           imageUrl:
-            "https://images.unsplash.com/photo-1494412651409-8963ce7935a7?w=1600&q=80&auto=format&fit=crop",
-          title: "Produtos importados direto pra você",
+            "https://images.unsplash.com/photo-1592286927505-1def25115558?w=1600&q=80&auto=format&fit=crop",
+          title: "Os lançamentos que você procura, direto pra você",
           subtitle:
-            "Garanta seu pedido agora e pague só quando o estoque chegar.",
+            "Celulares importados com procedência garantida. Pague só quando o estoque chegar.",
           linkUrl: "/loja",
           order: 1,
         },
         {
           imageUrl:
-            "https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=1600&q=80&auto=format&fit=crop",
-          title: "Tecnologia de ponta, prazo garantido",
-          subtitle: "Infraestrutura e sistemas confiáveis para escalar seu negócio.",
+            "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=1600&q=80&auto=format&fit=crop",
+          title: "Apple Watch original, entrega garantida",
+          subtitle: "Estoque limitado — garanta o seu por ordem de chegada.",
           linkUrl: "/loja",
           order: 2,
         },
@@ -63,9 +63,105 @@ async function main() {
 
   const productCount = await prisma.product.count();
   if (productCount === 0) {
-    await prisma.product.createMany({
-      data: [
-        {
+    const products = await Promise.all([
+      prisma.product.create({
+        data: {
+          name: "Moto Elétrica Urbana X1",
+          slug: "moto-eletrica-urbana-x1",
+          description:
+            "Moto elétrica ideal para o dia a dia na cidade: autonomia de até 80km, recarga completa em poucas horas e zero emissão de poluentes.",
+          images: [
+            "https://images.unsplash.com/photo-1580310614729-ccd69652491d?w=1200&q=80&auto=format&fit=crop",
+          ],
+          price: 8990.0,
+          sku: "MOTO-001",
+          stockQty: 0,
+          isPreOrder: true,
+          category: "Motos Elétricas",
+        },
+      }),
+      prisma.product.create({
+        data: {
+          name: "Moto Elétrica Off-Road Pro",
+          slug: "moto-eletrica-off-road-pro",
+          description:
+            "Moto elétrica robusta para todo tipo de terreno, motor de alta performance e suspensão reforçada.",
+          images: [
+            "https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=1200&q=80&auto=format&fit=crop",
+          ],
+          price: 12490.0,
+          sku: "MOTO-002",
+          stockQty: 0,
+          isPreOrder: true,
+          category: "Motos Elétricas",
+        },
+      }),
+      prisma.product.create({
+        data: {
+          name: "iPhone 15 Pro Max",
+          slug: "iphone-15-pro-max",
+          description:
+            "iPhone 15 Pro Max importado, lacrado, com garantia. Câmera profissional e desempenho de ponta.",
+          images: [
+            "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=1200&q=80&auto=format&fit=crop",
+          ],
+          price: 8499.0,
+          sku: "PHN-001",
+          stockQty: 0,
+          isPreOrder: true,
+          category: "Celulares",
+        },
+      }),
+      prisma.product.create({
+        data: {
+          name: "Samsung Galaxy S24 Ultra",
+          slug: "samsung-galaxy-s24-ultra",
+          description:
+            "Galaxy S24 Ultra importado, tela AMOLED, câmera de altíssima resolução e S Pen inclusa.",
+          images: [
+            "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=1200&q=80&auto=format&fit=crop",
+          ],
+          price: 7299.0,
+          sku: "PHN-002",
+          stockQty: 0,
+          isPreOrder: true,
+          category: "Celulares",
+        },
+      }),
+      prisma.product.create({
+        data: {
+          name: "Apple Watch Series 9",
+          slug: "apple-watch-series-9",
+          description:
+            "Apple Watch Series 9 original, monitor cardíaco, GPS e resistência à água.",
+          images: [
+            "https://images.unsplash.com/photo-1551816230-ef5deaed4a26?w=1200&q=80&auto=format&fit=crop",
+          ],
+          price: 3299.0,
+          sku: "WATCH-001",
+          stockQty: 0,
+          isPreOrder: true,
+          category: "Apple Watch",
+        },
+      }),
+      prisma.product.create({
+        data: {
+          name: "Apple Watch Ultra 2",
+          slug: "apple-watch-ultra-2",
+          description:
+            "Apple Watch Ultra 2, o mais resistente e completo da linha, ideal para esportes extremos.",
+          images: [
+            "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=1200&q=80&auto=format&fit=crop",
+          ],
+          price: 4999.0,
+          sku: "WATCH-002",
+          stockQty: 0,
+          isPreOrder: true,
+          category: "Apple Watch",
+        },
+      }),
+      prisma.product.create({
+        data: {
           name: "Fone de Ouvido Bluetooth Premium",
           slug: "fone-bluetooth-premium",
           description:
@@ -75,81 +171,13 @@ async function main() {
           ],
           price: 349.9,
           sku: "AUD-001",
-          stockQty: 0,
-          isPreOrder: true,
-          category: "Áudio",
-        },
-        {
-          name: "Smartwatch Series X",
-          slug: "smartwatch-series-x",
-          description:
-            "Relógio inteligente com monitor cardíaco, GPS integrado e resistência à água.",
-          images: [
-            "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1200&q=80&auto=format&fit=crop",
-          ],
-          price: 899.0,
-          sku: "WEAR-001",
-          stockQty: 0,
-          isPreOrder: true,
-          category: "Wearables",
-        },
-        {
-          name: "Drone 4K com Câmera Estabilizada",
-          slug: "drone-4k-camera",
-          description:
-            "Drone compacto com câmera 4K, gimbal de 3 eixos e até 35 minutos de voo.",
-          images: [
-            "https://images.unsplash.com/photo-1585386959984-a4155224a1ad?w=1200&q=80&auto=format&fit=crop",
-          ],
-          price: 2499.0,
-          sku: "DRN-001",
-          stockQty: 0,
-          isPreOrder: true,
-          category: "Drones",
-        },
-        {
-          name: "Câmera Mirrorless Profissional",
-          slug: "camera-mirrorless-pro",
-          description:
-            "Câmera mirrorless full-frame com gravação em 4K e sensor de alta resolução.",
-          images: [
-            "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=1200&q=80&auto=format&fit=crop",
-          ],
-          price: 7999.0,
-          sku: "CAM-001",
-          stockQty: 0,
-          isPreOrder: true,
-          category: "Fotografia",
-        },
-        {
-          name: "Notebook Ultra Slim",
-          slug: "notebook-ultra-slim",
-          description:
-            "Notebook leve e potente, ideal para trabalho e criação de conteúdo.",
-          images: [
-            "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=1200&q=80&auto=format&fit=crop",
-          ],
-          price: 5299.0,
-          sku: "NB-001",
-          stockQty: 2,
+          stockQty: 6,
           isPreOrder: false,
-          category: "Informática",
+          category: "Eletrônicos",
         },
-        {
-          name: "Smartphone Import Pro",
-          slug: "smartphone-import-pro",
-          description:
-            "Smartphone importado com tela AMOLED, câmera tripla e carregamento rápido.",
-          images: [
-            "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=1200&q=80&auto=format&fit=crop",
-          ],
-          price: 3199.0,
-          sku: "PHN-001",
-          stockQty: 0,
-          isPreOrder: true,
-          category: "Celulares",
-        },
-        {
+      }),
+      prisma.product.create({
+        data: {
           name: "Caixa de Som Portátil à Prova D'água",
           slug: "caixa-de-som-portatil",
           description:
@@ -159,74 +187,45 @@ async function main() {
           ],
           price: 279.9,
           sku: "AUD-002",
-          stockQty: 5,
+          stockQty: 8,
           isPreOrder: false,
-          category: "Áudio",
+          category: "Eletrônicos",
         },
-        {
-          name: "Controle de Videogame Wireless",
-          slug: "controle-videogame-wireless",
-          description:
-            "Controle sem fio compatível com múltiplas plataformas, bateria de longa duração.",
-          images: [
-            "https://images.unsplash.com/photo-1520170350707-b2da59970118?w=1200&q=80&auto=format&fit=crop",
-          ],
-          price: 349.0,
-          sku: "GAME-001",
-          stockQty: 0,
-          isPreOrder: true,
-          category: "Games",
-        },
-      ],
-    });
+      }),
+    ]);
     console.log("Produtos de demonstração criados.");
-  }
 
-  const serviceCount = await prisma.service.count();
-  if (serviceCount === 0) {
-    await prisma.service.createMany({
-      data: [
-        {
-          name: "Automação de tarefas e planilhas",
-          slug: "automacao-tarefas-planilhas",
-          description:
-            "Automatize processos repetitivos: geração de relatórios, integração de planilhas, envio de e-mails e notificações.",
-          category: "Automação",
-          complexity: "SIMPLES",
-          priceType: "FIXO",
-          price: 1200.0,
-        },
-        {
-          name: "Site institucional",
-          slug: "site-institucional",
-          description:
-            "Site profissional para apresentar sua empresa, com design responsivo e otimizado para buscadores.",
-          category: "Sistema Web",
-          complexity: "SIMPLES",
-          priceType: "FIXO",
-          price: 2500.0,
-        },
-        {
-          name: "Sistema de gestão sob medida",
-          slug: "sistema-gestao-sob-medida",
-          description:
-            "Sistema web completo para gerenciar sua operação: cadastros, relatórios, permissões de usuário e integrações.",
-          category: "Sistema Web",
-          complexity: "MEDIA",
-          priceType: "ORCAMENTO",
-        },
-        {
-          name: "Plataforma completa com integrações",
-          slug: "plataforma-completa-integracoes",
-          description:
-            "Desenvolvimento de plataformas robustas com múltiplas integrações (pagamento, ERP, APIs externas) e alta escalabilidade.",
-          category: "Sistema Complexo",
-          complexity: "COMPLEXA",
-          priceType: "ORCAMENTO",
-        },
+    const sampleReviews: Record<string, { name: string; rating: number; comment: string }[]> = {
+      "moto-eletrica-urbana-x1": [
+        { name: "Marcos T.", rating: 5, comment: "Chegou certinho, exatamente como anunciado. Economia absurda no dia a dia." },
+        { name: "Renata O.", rating: 5, comment: "Melhor custo-benefício que encontrei. Atendimento ótimo do início ao fim." },
       ],
-    });
-    console.log("Serviços de demonstração criados.");
+      "iphone-15-pro-max": [
+        { name: "André L.", rating: 5, comment: "Produto original, lacrado, sem nenhum problema. Recomendo demais." },
+        { name: "Priscila M.", rating: 4, comment: "Muito bom, só levou um pouco mais de tempo que eu esperava pra chegar." },
+      ],
+      "apple-watch-series-9": [
+        { name: "Thiago B.", rating: 5, comment: "Original e com garantia de verdade. Superou minhas expectativas." },
+      ],
+      "fone-bluetooth-premium": [
+        { name: "Larissa G.", rating: 5, comment: "Som excelente, cancelamento de ruído funciona muito bem." },
+        { name: "Felipe N.", rating: 4, comment: "Bom custo-benefício, bateria dura o que promete." },
+      ],
+    };
+
+    for (const product of products) {
+      const reviews = sampleReviews[product.slug];
+      if (!reviews) continue;
+      await prisma.review.createMany({
+        data: reviews.map((r) => ({
+          productId: product.id,
+          authorName: r.name,
+          rating: r.rating,
+          comment: r.comment,
+        })),
+      });
+    }
+    console.log("Avaliações de demonstração criadas.");
   }
 }
 

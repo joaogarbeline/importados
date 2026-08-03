@@ -111,15 +111,16 @@ export function CheckoutForm() {
           </div>
         </Card>
 
-        <Alert>
+        <Alert className="border-primary/30 bg-primary/5">
           <AlertDescription>
-            Itens sob encomenda só serão cobrados quando o estoque chegar —
-            você recebe um e-mail com o link de pagamento na hora certa.
+            Zero risco: itens sob encomenda só serão cobrados quando o
+            estoque chegar — você recebe um e-mail com o link de pagamento
+            na hora certa, por ordem de chegada do pedido.
           </AlertDescription>
         </Alert>
 
-        <Button type="submit" size="lg" disabled={pending}>
-          {pending ? "Enviando pedido..." : "Confirmar pedido"}
+        <Button type="submit" size="lg" disabled={pending} className="w-full">
+          {pending ? "Enviando pedido..." : "Confirmar e garantir meu pedido"}
         </Button>
       </div>
     </form>

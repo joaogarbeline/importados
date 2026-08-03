@@ -10,8 +10,8 @@ import {
   ShoppingCart,
   Package,
   Boxes,
-  Wrench,
   Images,
+  Star,
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -21,8 +21,8 @@ const NAV_ITEMS = [
   { href: "/admin/pedidos", label: "Pedidos", icon: ShoppingCart },
   { href: "/admin/produtos", label: "Produtos", icon: Package },
   { href: "/admin/estoque", label: "Estoque", icon: Boxes },
-  { href: "/admin/servicos", label: "Serviços", icon: Wrench },
   { href: "/admin/banners", label: "Banners", icon: Images },
+  { href: "/admin/avaliacoes", label: "Avaliações", icon: Star },
 ];
 
 export function AdminSidebar() {

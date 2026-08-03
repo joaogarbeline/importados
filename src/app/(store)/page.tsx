@@ -1,35 +1,62 @@
 import Link from "next/link";
-import { ArrowRightIcon, PackageIcon, CodeIcon, SparklesIcon } from "lucide-react";
+import {
+  ArrowRightIcon,
+  ShieldCheckIcon,
+  TruckIcon,
+  BadgeCheckIcon,
+  FlameIcon,
+} from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { buttonVariants } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatBRL } from "@/lib/money";
 import { cn } from "@/lib/utils";
 import { HeroCarousel } from "@/components/storefront/hero-carousel";
 import { Reveal } from "@/components/motion/reveal";
 import { TiltCard } from "@/components/motion/tilt-card";
+import { AnimatedCounter } from "@/components/motion/animated-counter";
+import { RatingStars, averageRating } from "@/components/storefront/rating-stars";
+import { CustomOrderDialog } from "@/components/storefront/custom-order-dialog";
+import { SALES_COUNTER_BASE } from "@/lib/config";
+
+const TRUST_ITEMS = [
+  {
+    icon: ShieldCheckIcon,
+    title: "Pagamento 100% seguro",
+    description: "Processado pelo Mercado Pago, a maior plataforma da América Latina.",
+  },
+  {
+    icon: BadgeCheckIcon,
+    title: "Produtos originais",
+    description: "Procedência garantida, sem réplicas ou produtos piratas.",
+  },
+  {
+    icon: TruckIcon,
+    title: "Só paga quando chega",
+    description: "Garanta seu pedido sem risco: o pagamento só é cobrado com o estoque disponível.",
+  },
+];
 
 export default async function HomePage() {
-  const [featuredProducts, featuredServices, banners] = await Promise.all([
+  const [featuredProducts, banners, totalOrders] = await Promise.all([
     prisma.product.findMany({
       where: { active: true },
       orderBy: { createdAt: "desc" },
       take: 4,
-    }),
-    prisma.service.findMany({
-      where: { active: true },
-      orderBy: { createdAt: "desc" },
-      take: 3,
+      include: { reviews: { select: { rating: true } } },
     }),
     prisma.banner.findMany({
       where: { active: true },
       orderBy: [{ order: "asc" }, { createdAt: "desc" }],
     }),
+    prisma.order.count(),
   ]);
 
+  const salesCount = SALES_COUNTER_BASE + totalOrders;
+
   return (
-    <div className="flex flex-col gap-20 pb-24">
+    <div className="flex flex-col gap-16 pb-24 sm:gap-20">
       <section className="bg-grid relative overflow-hidden border-b">
         <div
           aria-hidden
@@ -40,19 +67,18 @@ export default async function HomePage() {
           className="pointer-events-none absolute right-[-6rem] top-24 h-64 w-64 rounded-full bg-primary/10 blur-[90px]"
         />
 
-        <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 py-16 sm:py-24">
-          <Reveal className="flex flex-col items-center gap-6 text-center">
+        <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-12 sm:gap-10 sm:py-24">
+          <Reveal className="flex flex-col items-center gap-5 text-center sm:gap-6">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
-              <SparklesIcon className="size-3.5" />
-              Loja virtual & desenvolvimento de sistemas
+              <FlameIcon className="size-3.5" />
+              Estoque por ordem de chegada — garanta o seu
             </span>
-            <h1 className="max-w-3xl text-4xl font-semibold tracking-tight sm:text-6xl">
-              <span className="text-gradient-brand">Triade</span> Sistemas e
-              Importados
+            <h1 className="max-w-3xl text-3xl font-semibold tracking-tight sm:text-6xl">
+              <span className="text-gradient-brand">Triade</span> Importados
             </h1>
             <p className="max-w-xl text-balance text-muted-foreground sm:text-lg">
-              Produtos importados sob encomenda e desenvolvimento de sistemas
-              sob medida — de automações simples a plataformas completas.
+              Motos elétricas, iPhone, Apple Watch e muito mais — direto de
+              fábrica, sob encomenda, com pagamento 100% seguro e sem risco.
             </p>
             <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link
@@ -61,13 +87,17 @@ export default async function HomePage() {
               >
                 Ver produtos <ArrowRightIcon className="size-4" />
               </Link>
-              <Link
-                href="/servicos"
-                className={cn(buttonVariants({ variant: "outline", size: "lg" }))}
-              >
-                Conhecer os serviços
-              </Link>
+              <CustomOrderDialog
+                triggerLabel="Fazer uma encomenda"
+                variant="outline"
+              />
             </div>
+            <p className="text-sm text-muted-foreground">
+              <span className="font-semibold text-foreground">
+                +<AnimatedCounter value={salesCount} className="tabular-nums" />
+              </span>{" "}
+              pedidos realizados com sucesso
+            </p>
           </Reveal>
 
           {banners.length > 0 && (
@@ -78,59 +108,29 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto grid w-full max-w-6xl gap-6 px-4 sm:grid-cols-2">
-        <Reveal>
-          <Card className="h-full border-primary/15 bg-gradient-to-br from-primary/5 to-transparent">
-            <CardHeader className="gap-3">
-              <div className="flex size-11 items-center justify-center rounded-xl bg-primary/15 text-primary">
-                <PackageIcon className="size-5" />
-              </div>
-              <CardTitle>Loja virtual</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              <p>
-                A maioria dos produtos é vendida sob encomenda: você garante
-                seu pedido e só paga quando o estoque chegar — avisamos por
-                e-mail assim que liberar.
-              </p>
-              <Link
-                href="/loja"
-                className="font-medium text-primary hover:underline"
-              >
-                Ver catálogo →
-              </Link>
-            </CardContent>
-          </Card>
-        </Reveal>
-        <Reveal delay={0.1}>
-          <Card className="h-full border-primary/15 bg-gradient-to-br from-primary/5 to-transparent">
-            <CardHeader className="gap-3">
-              <div className="flex size-11 items-center justify-center rounded-xl bg-primary/15 text-primary">
-                <CodeIcon className="size-5" />
-              </div>
-              <CardTitle>Serviços de programação</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              <p>
-                Da automação simples de tarefas até sistemas completos sob
-                medida para o seu negócio.
-              </p>
-              <Link
-                href="/servicos"
-                className="font-medium text-primary hover:underline"
-              >
-                Ver serviços →
-              </Link>
-            </CardContent>
-          </Card>
-        </Reveal>
+      <section className="mx-auto grid w-full max-w-6xl gap-4 px-4 sm:grid-cols-3 sm:gap-6">
+        {TRUST_ITEMS.map((item, i) => (
+          <Reveal key={item.title} delay={i * 0.08}>
+            <Card className="h-full border-primary/15 bg-gradient-to-br from-primary/5 to-transparent">
+              <CardContent className="flex flex-col gap-2 p-5">
+                <div className="flex size-9 items-center justify-center rounded-lg bg-primary/15 text-primary">
+                  <item.icon className="size-4.5" />
+                </div>
+                <p className="font-medium">{item.title}</p>
+                <p className="text-sm text-muted-foreground">
+                  {item.description}
+                </p>
+              </CardContent>
+            </Card>
+          </Reveal>
+        ))}
       </section>
 
       {featuredProducts.length > 0 && (
         <section className="mx-auto w-full max-w-6xl px-4">
           <Reveal className="mb-6 flex items-center justify-between">
             <h2 className="font-heading text-xl font-semibold sm:text-2xl">
-              Produtos recentes
+              Mais procurados
             </h2>
             <Link
               href="/loja"
@@ -159,6 +159,14 @@ export default async function HomePage() {
                         <span className="line-clamp-1 text-sm font-medium">
                           {product.name}
                         </span>
+                        {product.reviews.length > 0 && (
+                          <div className="flex items-center gap-1.5">
+                            <RatingStars rating={averageRating(product.reviews)} />
+                            <span className="text-xs text-muted-foreground">
+                              ({product.reviews.length})
+                            </span>
+                          </div>
+                        )}
                         <div className="flex items-center gap-2">
                           <span className="text-sm text-muted-foreground">
                             {formatBRL(product.price)}
@@ -177,69 +185,26 @@ export default async function HomePage() {
         </section>
       )}
 
-      {featuredServices.length > 0 && (
-        <section className="mx-auto w-full max-w-6xl px-4">
-          <Reveal className="mb-6 flex items-center justify-between">
-            <h2 className="font-heading text-xl font-semibold sm:text-2xl">
-              Serviços
-            </h2>
-            <Link
-              href="/servicos"
-              className="text-sm text-muted-foreground hover:text-primary"
-            >
-              Ver todos
-            </Link>
-          </Reveal>
-          <div className="grid gap-5 sm:grid-cols-3">
-            {featuredServices.map((service, i) => (
-              <Reveal key={service.id} delay={i * 0.08}>
-                <TiltCard>
-                  <Card className="h-full">
-                    <CardHeader>
-                      <CardTitle className="text-base">
-                        {service.name}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-                      <p className="line-clamp-3">{service.description}</p>
-                      <span className="font-medium text-foreground">
-                        {service.priceType === "FIXO" && service.price
-                          ? formatBRL(service.price)
-                          : "Sob orçamento"}
-                      </span>
-                    </CardContent>
-                  </Card>
-                </TiltCard>
-              </Reveal>
-            ))}
-          </div>
-        </section>
-      )}
-
       <section className="mx-auto w-full max-w-6xl px-4">
         <Reveal>
-          <div className="relative overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-foreground via-foreground to-primary/40 px-6 py-14 text-center text-background sm:py-20">
+          <div className="relative overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-foreground via-foreground to-primary/40 px-6 py-12 text-center text-background sm:py-20">
             <div
               aria-hidden
               className="pointer-events-none absolute inset-0 bg-grid opacity-10"
             />
             <div className="relative flex flex-col items-center gap-4">
               <h2 className="max-w-xl text-2xl font-semibold sm:text-3xl">
-                Tem um projeto em mente?
+                Não achou o que procura? Não se preocupe!
               </h2>
               <p className="max-w-lg text-sm text-background/80 sm:text-base">
-                Da automação simples até sistemas completos — conte pra gente
-                o que você precisa e montamos uma proposta sob medida.
+                Conte pra gente o produto que você quer e a gente cuida de
+                trazer sob encomenda — rápido, seguro e sem complicação.
               </p>
-              <Link
-                href="/servicos"
-                className={cn(
-                  buttonVariants({ size: "lg", variant: "secondary" }),
-                  "mt-2"
-                )}
-              >
-                Solicitar orçamento
-              </Link>
+              <CustomOrderDialog
+                triggerLabel="Faça sua encomenda"
+                variant="secondary"
+                className="mt-2"
+              />
             </div>
           </div>
         </Reveal>
