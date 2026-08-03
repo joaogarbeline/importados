@@ -1,14 +1,9 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { formatBRL } from "@/lib/money";
 import { cn } from "@/lib/utils";
-import { Reveal } from "@/components/motion/reveal";
-import { TiltCard } from "@/components/motion/tilt-card";
-import { RatingStars, averageRating } from "@/components/storefront/rating-stars";
+import { ProductCard } from "@/components/storefront/product-card";
 
-export const metadata = { title: "Loja — Triade Sistemas e Importados" };
+export const metadata = { title: "Loja — Triade Importados" };
 
 export default async function LojaPage({
   searchParams,
@@ -81,48 +76,11 @@ export default async function LojaPage({
       ) : (
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {products.map((product, i) => (
-            <Reveal key={product.id} delay={(i % 6) * 0.05}>
-              <TiltCard>
-                <Link href={`/loja/${product.slug}`}>
-                  <Card className="h-full overflow-hidden transition-shadow hover:shadow-xl hover:shadow-primary/10">
-                    <div className="aspect-square w-full overflow-hidden bg-muted">
-                      {product.images[0] ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={product.images[0]}
-                          alt={product.name}
-                          className="size-full object-cover transition-transform duration-500 hover:scale-105"
-                        />
-                      ) : null}
-                    </div>
-                    <CardContent className="flex flex-col gap-1 pt-3">
-                      <span className="text-xs text-muted-foreground">
-                        {product.category}
-                      </span>
-                      <span className="line-clamp-1 font-medium">
-                        {product.name}
-                      </span>
-                      {product.reviews.length > 0 && (
-                        <div className="flex items-center gap-1.5">
-                          <RatingStars rating={averageRating(product.reviews)} />
-                          <span className="text-xs text-muted-foreground">
-                            ({product.reviews.length})
-                          </span>
-                        </div>
-                      )}
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm text-muted-foreground">
-                          {formatBRL(product.price)}
-                        </span>
-                        {(product.isPreOrder || product.stockQty <= 0) && (
-                          <Badge variant="secondary">Sob encomenda</Badge>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              </TiltCard>
-            </Reveal>
+            <ProductCard
+              key={product.slug}
+              product={product}
+              delay={(i % 6) * 0.05}
+            />
           ))}
         </div>
       )}

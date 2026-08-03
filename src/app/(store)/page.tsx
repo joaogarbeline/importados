@@ -9,14 +9,11 @@ import {
 import { prisma } from "@/lib/prisma";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { formatBRL } from "@/lib/money";
 import { cn } from "@/lib/utils";
 import { HeroCarousel } from "@/components/storefront/hero-carousel";
 import { Reveal } from "@/components/motion/reveal";
-import { TiltCard } from "@/components/motion/tilt-card";
 import { AnimatedCounter } from "@/components/motion/animated-counter";
-import { RatingStars, averageRating } from "@/components/storefront/rating-stars";
+import { ProductCard } from "@/components/storefront/product-card";
 import { CustomOrderDialog } from "@/components/storefront/custom-order-dialog";
 import { SALES_COUNTER_BASE } from "@/lib/config";
 
@@ -111,7 +108,7 @@ export default async function HomePage() {
       <section className="mx-auto grid w-full max-w-6xl gap-4 px-4 sm:grid-cols-3 sm:gap-6">
         {TRUST_ITEMS.map((item, i) => (
           <Reveal key={item.title} delay={i * 0.08}>
-            <Card className="h-full border-primary/15 bg-gradient-to-br from-primary/5 to-transparent">
+            <Card className="neon-border-hover h-full bg-gradient-to-br from-primary/5 to-transparent">
               <CardContent className="flex flex-col gap-2 p-5">
                 <div className="flex size-9 items-center justify-center rounded-lg bg-primary/15 text-primary">
                   <item.icon className="size-4.5" />
@@ -141,45 +138,7 @@ export default async function HomePage() {
           </Reveal>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {featuredProducts.map((product, i) => (
-              <Reveal key={product.id} delay={i * 0.06}>
-                <TiltCard>
-                  <Link href={`/loja/${product.slug}`}>
-                    <Card className="h-full overflow-hidden transition-shadow hover:shadow-xl hover:shadow-primary/10">
-                      <div className="aspect-square w-full overflow-hidden bg-muted">
-                        {product.images[0] ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img
-                            src={product.images[0]}
-                            alt={product.name}
-                            className="size-full object-cover transition-transform duration-500 hover:scale-105"
-                          />
-                        ) : null}
-                      </div>
-                      <CardContent className="flex flex-col gap-1 pt-3">
-                        <span className="line-clamp-1 text-sm font-medium">
-                          {product.name}
-                        </span>
-                        {product.reviews.length > 0 && (
-                          <div className="flex items-center gap-1.5">
-                            <RatingStars rating={averageRating(product.reviews)} />
-                            <span className="text-xs text-muted-foreground">
-                              ({product.reviews.length})
-                            </span>
-                          </div>
-                        )}
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm text-muted-foreground">
-                            {formatBRL(product.price)}
-                          </span>
-                          {(product.isPreOrder || product.stockQty <= 0) && (
-                            <Badge variant="secondary">Sob encomenda</Badge>
-                          )}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </Link>
-                </TiltCard>
-              </Reveal>
+              <ProductCard key={product.slug} product={product} delay={i * 0.06} />
             ))}
           </div>
         </section>
@@ -187,7 +146,7 @@ export default async function HomePage() {
 
       <section className="mx-auto w-full max-w-6xl px-4">
         <Reveal>
-          <div className="relative overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-foreground via-foreground to-primary/40 px-6 py-12 text-center text-background sm:py-20">
+          <div className="neon-border relative overflow-hidden rounded-2xl bg-gradient-to-br from-foreground via-foreground to-primary/40 px-6 py-12 text-center text-background sm:py-20">
             <div
               aria-hidden
               className="pointer-events-none absolute inset-0 bg-grid opacity-10"

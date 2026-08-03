@@ -34,7 +34,7 @@ export default async function ProdutoPage({
       <div className="grid gap-8 sm:grid-cols-2 sm:gap-10">
         <Reveal>
           <TiltCard>
-            <div className="aspect-square w-full overflow-hidden rounded-2xl border border-white/10 bg-muted shadow-xl shadow-black/10">
+            <div className="neon-border aspect-square w-full overflow-hidden rounded-2xl bg-muted shadow-xl shadow-black/10">
               {product.images[0] ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img

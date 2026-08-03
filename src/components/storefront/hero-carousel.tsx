@@ -77,7 +77,7 @@ export function HeroCarousel({ banners }: { banners: Banner[] }) {
   );
 
   return (
-    <div className="perspective-1000 relative h-[380px] w-full overflow-hidden rounded-2xl border border-white/10 sm:h-[480px]">
+    <div className="perspective-1000 neon-border relative h-[380px] w-full overflow-hidden rounded-2xl sm:h-[480px]">
       <AnimatePresence initial={false} mode="popLayout">
         {banner.linkUrl ? (
           <Link
