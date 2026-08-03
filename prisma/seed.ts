@@ -32,7 +32,7 @@ async function main() {
       data: [
         {
           imageUrl:
-            "https://images.unsplash.com/photo-1580310614729-ccd69652491d?w=1600&q=80&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1623079397242-c2e809a6ef1d?w=1600&q=80&auto=format&fit=crop",
           title: "Motos elétricas importadas com garantia",
           subtitle:
             "Economia, potência e estilo — garanta a sua sob encomenda antes que a próxima leva acabe.",
@@ -50,7 +50,7 @@ async function main() {
         },
         {
           imageUrl:
-            "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=1600&q=80&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1544117519-31a4b719223d?w=1600&q=80&auto=format&fit=crop",
           title: "Apple Watch original, entrega garantida",
           subtitle: "Estoque limitado — garanta o seu por ordem de chegada.",
           linkUrl: "/loja",
@@ -71,7 +71,7 @@ async function main() {
           description:
             "Moto elétrica ideal para o dia a dia na cidade: autonomia de até 80km, recarga completa em poucas horas e zero emissão de poluentes.",
           images: [
-            "https://images.unsplash.com/photo-1580310614729-ccd69652491d?w=1200&q=80&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1623079397242-c2e809a6ef1d?w=1200&q=80&auto=format&fit=crop",
           ],
           price: 8990.0,
           sku: "MOTO-001",
@@ -87,7 +87,7 @@ async function main() {
           description:
             "Moto elétrica robusta para todo tipo de terreno, motor de alta performance e suspensão reforçada.",
           images: [
-            "https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=1200&q=80&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1638743995296-cac26c72fa7a?w=1200&q=80&auto=format&fit=crop",
           ],
           price: 12490.0,
           sku: "MOTO-002",
@@ -119,7 +119,7 @@ async function main() {
           description:
             "Galaxy S24 Ultra importado, tela AMOLED, câmera de altíssima resolução e S Pen inclusa.",
           images: [
-            "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=1200&q=80&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1706300896423-7d08346e8dbb?w=1200&q=80&auto=format&fit=crop",
           ],
           price: 7299.0,
           sku: "PHN-002",
@@ -167,7 +167,7 @@ async function main() {
           description:
             "Fone de ouvido sem fio com cancelamento de ruído ativo e até 30h de bateria.",
           images: [
-            "https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=1200&q=80&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1567928513899-997d98489fbd?w=1200&q=80&auto=format&fit=crop",
           ],
           price: 349.9,
           sku: "AUD-001",
@@ -183,7 +183,7 @@ async function main() {
           description:
             "Caixa de som Bluetooth compacta, resistente à água, com graves potentes.",
           images: [
-            "https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=1200&q=80&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1675319245480-215961c129f1?w=1200&q=80&auto=format&fit=crop",
           ],
           price: 279.9,
           sku: "AUD-002",

@@ -13,7 +13,7 @@ export default async function AdminBannersPage() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-semibold">Banners</h1>
+        <h1 className="font-heading text-2xl font-bold">Banners</h1>
         <p className="text-sm text-muted-foreground">
           Gerencie o carrossel de banners exibido na home da loja.
         </p>

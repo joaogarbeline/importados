@@ -69,7 +69,7 @@ export default async function AdminFinanceiroPage() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-semibold">Financeiro</h1>
+        <h1 className="font-heading text-2xl font-bold">Financeiro</h1>
         <p className="text-sm text-muted-foreground">
           Pagamentos recebidos e pendentes via Mercado Pago.
         </p>

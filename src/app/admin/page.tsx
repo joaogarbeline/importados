@@ -47,7 +47,7 @@ export default async function AdminOverviewPage() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-semibold">Visão geral</h1>
+        <h1 className="font-heading text-2xl font-bold">Visão geral</h1>
         <p className="text-sm text-muted-foreground">
           Resumo da operação da Triade Sistemas e Importados.
         </p>

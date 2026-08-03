@@ -34,7 +34,7 @@ export default async function AdminUsersPage({
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-semibold">Usuários</h1>
+        <h1 className="font-heading text-2xl font-bold">Usuários</h1>
         <p className="text-sm text-muted-foreground">
           Clientes e administradores cadastrados na loja.
         </p>

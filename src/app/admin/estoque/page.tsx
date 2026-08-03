@@ -27,7 +27,7 @@ export default async function AdminEstoquePage() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-semibold">Estoque</h1>
+        <h1 className="font-heading text-2xl font-bold">Estoque</h1>
         <p className="text-sm text-muted-foreground">
           Ao adicionar estoque, os pedidos pendentes são liberados
           automaticamente para pagamento por ordem de chegada, e o cliente é

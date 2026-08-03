@@ -1,14 +1,24 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ShoppingBagIcon } from "lucide-react";
 import type { SocialProofEntry } from "@/lib/social-proof";
+
+const FIRST_DELAY_RANGE = [14000, 28000] as const;
+const GAP_RANGE = [30000, 65000] as const;
+const VISIBLE_DURATION = 6500;
+
+function randomBetween([min, max]: readonly [number, number]) {
+  return min + Math.random() * (max - min);
+}
 
 export function SalesPopup() {
   const [feed, setFeed] = useState<SocialProofEntry[]>([]);
   const [index, setIndex] = useState(0);
   const [visible, setVisible] = useState(false);
+  const feedRef = useRef(feed);
+  feedRef.current = feed;
 
   useEffect(() => {
     let cancelled = false;
@@ -34,18 +44,36 @@ export function SalesPopup() {
   useEffect(() => {
     if (feed.length === 0) return;
 
-    const showAfter = setTimeout(() => setVisible(true), 3000);
-    const hideAfter = setTimeout(() => setVisible(false), 8000);
-    const nextAfter = setTimeout(() => {
-      setIndex((i) => (i + 1) % feed.length);
-    }, 8600);
+    let showTimer: ReturnType<typeof setTimeout>;
+    let hideTimer: ReturnType<typeof setTimeout>;
+    let nextTimer: ReturnType<typeof setTimeout>;
+    let cancelled = false;
+
+    function scheduleNext(delay: number) {
+      showTimer = setTimeout(() => {
+        if (cancelled) return;
+        setVisible(true);
+        hideTimer = setTimeout(() => {
+          if (cancelled) return;
+          setVisible(false);
+          nextTimer = setTimeout(() => {
+            if (cancelled) return;
+            setIndex((i) => (i + 1) % feedRef.current.length);
+            scheduleNext(randomBetween(GAP_RANGE));
+          }, 800);
+        }, VISIBLE_DURATION);
+      }, delay);
+    }
+
+    scheduleNext(randomBetween(FIRST_DELAY_RANGE));
 
     return () => {
-      clearTimeout(showAfter);
-      clearTimeout(hideAfter);
-      clearTimeout(nextAfter);
+      cancelled = true;
+      clearTimeout(showTimer);
+      clearTimeout(hideTimer);
+      clearTimeout(nextTimer);
     };
-  }, [feed, index]);
+  }, [feed.length > 0]);
 
   if (feed.length === 0) return null;
   const entry = feed[index];

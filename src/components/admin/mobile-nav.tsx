@@ -5,6 +5,7 @@ import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { AdminSidebar } from "@/components/admin/sidebar";
+import { Logo } from "@/components/logo";
 
 export function AdminMobileNav() {
   const [open, setOpen] = useState(false);
@@ -17,10 +18,7 @@ export function AdminMobileNav() {
       <SheetContent side="left" className="w-64 p-0">
         <SheetTitle className="sr-only">Menu</SheetTitle>
         <div className="border-b px-4 py-4">
-          <p className="text-sm font-semibold leading-tight">
-            Triade Sistemas e Importados
-          </p>
-          <p className="text-xs text-muted-foreground">Painel administrativo</p>
+          <Logo tagline="Painel administrativo" />
         </div>
         <div onClick={() => setOpen(false)}>
           <AdminSidebar />

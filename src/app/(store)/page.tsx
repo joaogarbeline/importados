@@ -73,7 +73,7 @@ export default async function HomePage() {
               <FlameIcon className="size-3.5" />
               Estoque por ordem de chegada — garanta o seu
             </span>
-            <h1 className="max-w-3xl text-3xl font-semibold tracking-tight sm:text-6xl">
+            <h1 className="max-w-3xl font-heading text-3xl font-extrabold tracking-tight sm:text-6xl">
               <span className="text-gradient-brand">Triade</span> Importados
             </h1>
             <p className="max-w-xl text-balance text-muted-foreground sm:text-lg">
@@ -193,7 +193,7 @@ export default async function HomePage() {
               className="pointer-events-none absolute inset-0 bg-grid opacity-10"
             />
             <div className="relative flex flex-col items-center gap-4">
-              <h2 className="max-w-xl text-2xl font-semibold sm:text-3xl">
+              <h2 className="max-w-xl font-heading text-2xl font-extrabold sm:text-3xl">
                 Não achou o que procura? Não se preocupe!
               </h2>
               <p className="max-w-lg text-sm text-background/80 sm:text-base">
