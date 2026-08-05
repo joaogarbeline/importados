@@ -122,10 +122,24 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background font-semibold text-foreground antialiased;
   }
   html {
     @apply font-sans;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading font-extrabold tracking-tight text-balance;
+  }
+  p {
+    @apply leading-relaxed;
+  }
+  ::selection {
+    background: color-mix(in oklch, var(--primary) 35%, transparent);
   }
 }
 
@@ -190,5 +204,32 @@
     text-shadow:
       0 0 12px color-mix(in oklch, var(--primary) 70%, transparent),
       0 0 30px color-mix(in oklch, var(--primary) 40%, transparent);
+  }
+
+  .card-lift {
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
+  }
+
+  .card-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -20px color-mix(in oklch, var(--foreground) 25%, transparent);
+  }
+
+  .stock-dot {
+    box-shadow: 0 0 0 3px color-mix(in oklch, currentColor 25%, transparent);
+  }
+
+  .pulse-dot {
+    animation: pulse-dot 1.8s ease-in-out infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.4;
+    }
   }
 }

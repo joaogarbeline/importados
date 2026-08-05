@@ -93,17 +93,19 @@ export function SalesPopup() {
               <ShoppingBagIcon className="size-4" />
             </div>
             <div className="text-xs">
-              <p className="font-medium text-foreground">
+              <p className="font-bold text-foreground">
                 {entry.name}
                 {entry.city ? ` · ${entry.city}` : ""}
               </p>
-              <p className="text-muted-foreground">
+              <p className="font-semibold text-muted-foreground">
                 comprou{" "}
-                <span className="font-medium text-foreground">
+                <span className="font-bold text-foreground">
                   {entry.product}
                 </span>
               </p>
-              <p className="text-muted-foreground">há {entry.minutesAgo} min</p>
+              <p className="font-semibold text-muted-foreground">
+                há {entry.minutesAgo} min
+              </p>
             </div>
           </motion.div>
         )}

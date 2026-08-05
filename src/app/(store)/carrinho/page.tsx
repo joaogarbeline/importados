@@ -14,10 +14,10 @@ export default function CarrinhoPage() {
   if (items.length === 0) {
     return (
       <div className="mx-auto flex w-full max-w-3xl flex-col items-center gap-4 px-4 py-20 text-center">
-        <h1 className="font-heading text-2xl font-semibold">
+        <h1 className="font-heading text-2xl font-extrabold">
           Seu carrinho está vazio
         </h1>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm font-semibold text-muted-foreground">
           Que tal garantir seu produto antes que o estoque acabe?
         </p>
         <Link href="/loja" className={cn(buttonVariants())}>
@@ -29,7 +29,9 @@ export default function CarrinhoPage() {
 
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-10">
-      <h1 className="font-heading text-2xl font-semibold">Seu carrinho</h1>
+      <h1 className="font-heading text-2xl font-extrabold tracking-tight">
+        Seu carrinho
+      </h1>
 
       <div className="mt-6 flex flex-col gap-4">
         {items.map((item) => (
@@ -51,7 +53,7 @@ export default function CarrinhoPage() {
               <div className="flex items-start justify-between gap-2">
                 <Link
                   href={`/loja/${item.slug}`}
-                  className="font-medium hover:underline"
+                  className="font-bold hover:underline"
                 >
                   {item.name}
                 </Link>
@@ -64,7 +66,7 @@ export default function CarrinhoPage() {
                   <XIcon className="size-4" />
                 </button>
               </div>
-              <span className="text-sm text-muted-foreground">
+              <span className="text-sm font-semibold text-muted-foreground">
                 {formatBRL(item.price)} un.
               </span>
               <div className="flex items-center gap-2">
@@ -76,27 +78,36 @@ export default function CarrinhoPage() {
                 >
                   <MinusIcon />
                 </Button>
-                <span className="w-8 text-center">{item.qty}</span>
+                <span className="w-8 text-center font-bold">{item.qty}</span>
                 <Button
                   type="button"
                   variant="outline"
                   size="icon-sm"
                   onClick={() => updateQty(item.productId, item.qty + 1)}
+                  disabled={item.maxQty !== undefined && item.qty >= item.maxQty}
                 >
                   <PlusIcon />
                 </Button>
-                <span className="ml-auto font-medium">
+                <span className="ml-auto font-extrabold">
                   {formatBRL(item.price * item.qty)}
                 </span>
               </div>
+              {item.maxQty !== undefined && item.qty >= item.maxQty && (
+                <span className="text-[11px] font-bold text-muted-foreground">
+                  Quantidade máxima em estoque atingida
+                </span>
+              )}
             </div>
           </Card>
         ))}
       </div>
 
       <div className="mt-8 flex flex-col items-center gap-3 border-t pt-6 sm:items-end">
-        <div className="text-lg font-semibold">
-          Total: {formatBRL(totalPrice)}
+        <div className="text-lg font-extrabold">
+          Total:{" "}
+          <span className="text-gradient-brand">
+            {formatBRL(totalPrice)}
+          </span>
         </div>
         <Link
           href="/checkout"

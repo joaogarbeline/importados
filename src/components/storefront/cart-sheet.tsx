@@ -40,7 +40,7 @@ export function CartSheet() {
         </SheetHeader>
 
         {items.length === 0 ? (
-          <p className="px-4 text-sm text-muted-foreground">
+          <p className="px-4 text-sm font-semibold text-muted-foreground">
             Seu carrinho está vazio.
           </p>
         ) : (
@@ -61,7 +61,7 @@ export function CartSheet() {
                   <div className="flex items-start justify-between gap-2">
                     <Link
                       href={`/loja/${item.slug}`}
-                      className="text-sm font-medium hover:underline"
+                      className="text-sm font-bold hover:underline"
                     >
                       {item.name}
                     </Link>
@@ -74,7 +74,7 @@ export function CartSheet() {
                       <XIcon className="size-3.5" />
                     </button>
                   </div>
-                  <span className="text-sm text-muted-foreground">
+                  <span className="text-sm font-semibold text-muted-foreground">
                     {formatBRL(item.price)}
                   </span>
                   <div className="flex items-center gap-2">
@@ -86,15 +86,23 @@ export function CartSheet() {
                     >
                       <MinusIcon />
                     </Button>
-                    <span className="w-6 text-center text-sm">{item.qty}</span>
+                    <span className="w-6 text-center text-sm font-bold">
+                      {item.qty}
+                    </span>
                     <Button
                       type="button"
                       variant="outline"
                       size="icon-xs"
                       onClick={() => updateQty(item.productId, item.qty + 1)}
+                      disabled={item.maxQty !== undefined && item.qty >= item.maxQty}
                     >
                       <PlusIcon />
                     </Button>
+                    {item.maxQty !== undefined && item.qty >= item.maxQty && (
+                      <span className="text-[11px] font-bold text-muted-foreground">
+                        estoque máx.
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -103,9 +111,11 @@ export function CartSheet() {
         )}
 
         <SheetFooter className="gap-2">
-          <div className="flex items-center justify-between text-sm font-medium">
+          <div className="flex items-center justify-between text-sm font-extrabold">
             <span>Total</span>
-            <span>{formatBRL(totalPrice)}</span>
+            <span className="text-gradient-brand text-base">
+              {formatBRL(totalPrice)}
+            </span>
           </div>
           <Link
             href="/checkout"

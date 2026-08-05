@@ -33,8 +33,10 @@ export default async function LojaPage({
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-10">
-      <h1 className="font-heading text-2xl font-semibold">Loja</h1>
-      <p className="mt-1 text-sm text-muted-foreground">
+      <h1 className="font-heading text-3xl font-extrabold tracking-tight">
+        Loja
+      </h1>
+      <p className="mt-1.5 max-w-xl text-sm font-semibold text-muted-foreground">
         Produtos sob encomenda com procedência garantida: garanta o seu agora
         e finalize o pagamento só quando o estoque chegar — sem surpresas.
       </p>
@@ -44,10 +46,10 @@ export default async function LojaPage({
           <Link
             href="/loja"
             className={cn(
-              "rounded-full border px-3 py-1 text-sm transition-colors",
+              "rounded-full border px-3.5 py-1.5 text-sm font-bold transition-all",
               !categoria
-                ? "border-primary bg-primary text-primary-foreground"
-                : "text-muted-foreground hover:text-foreground"
+                ? "glow-primary border-primary bg-primary text-primary-foreground"
+                : "border-border text-muted-foreground hover:border-primary/40 hover:text-foreground"
             )}
           >
             Todos
@@ -57,10 +59,10 @@ export default async function LojaPage({
               key={cat}
               href={`/loja?categoria=${encodeURIComponent(cat)}`}
               className={cn(
-                "rounded-full border px-3 py-1 text-sm transition-colors",
+                "rounded-full border px-3.5 py-1.5 text-sm font-bold transition-all",
                 categoria === cat
-                  ? "border-primary bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:text-foreground"
+                  ? "glow-primary border-primary bg-primary text-primary-foreground"
+                  : "border-border text-muted-foreground hover:border-primary/40 hover:text-foreground"
               )}
             >
               {cat}
@@ -70,7 +72,7 @@ export default async function LojaPage({
       )}
 
       {products.length === 0 ? (
-        <p className="mt-10 text-sm text-muted-foreground">
+        <p className="mt-10 text-sm font-semibold text-muted-foreground">
           Nenhum produto encontrado.
         </p>
       ) : (

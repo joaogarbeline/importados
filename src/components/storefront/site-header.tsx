@@ -27,7 +27,7 @@ export async function SiteHeader() {
           <Logo />
         </Link>
 
-        <nav className="hidden items-center gap-6 text-sm font-medium sm:flex">
+        <nav className="hidden items-center gap-6 text-sm font-bold sm:flex">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}

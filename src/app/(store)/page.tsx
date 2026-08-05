@@ -66,14 +66,14 @@ export default async function HomePage() {
 
         <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-12 sm:gap-10 sm:py-24">
           <Reveal className="flex flex-col items-center gap-5 text-center sm:gap-6">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-bold text-primary">
               <FlameIcon className="size-3.5" />
               Estoque por ordem de chegada — garanta o seu
             </span>
             <h1 className="max-w-3xl font-heading text-3xl font-extrabold tracking-tight sm:text-6xl">
               <span className="text-gradient-brand">Triade</span> Importados
             </h1>
-            <p className="max-w-xl text-balance text-muted-foreground sm:text-lg">
+            <p className="max-w-xl text-balance font-semibold text-muted-foreground sm:text-lg">
               Motos elétricas, iPhone, Apple Watch e muito mais — direto de
               fábrica, sob encomenda, com pagamento 100% seguro e sem risco.
             </p>
@@ -89,8 +89,8 @@ export default async function HomePage() {
                 variant="outline"
               />
             </div>
-            <p className="text-sm text-muted-foreground">
-              <span className="font-semibold text-foreground">
+            <p className="text-sm font-semibold text-muted-foreground">
+              <span className="font-extrabold text-foreground">
                 +<AnimatedCounter value={salesCount} className="tabular-nums" />
               </span>{" "}
               pedidos realizados com sucesso
@@ -113,8 +113,8 @@ export default async function HomePage() {
                 <div className="flex size-9 items-center justify-center rounded-lg bg-primary/15 text-primary">
                   <item.icon className="size-4.5" />
                 </div>
-                <p className="font-medium">{item.title}</p>
-                <p className="text-sm text-muted-foreground">
+                <p className="font-extrabold">{item.title}</p>
+                <p className="text-sm font-semibold text-muted-foreground">
                   {item.description}
                 </p>
               </CardContent>
@@ -126,12 +126,12 @@ export default async function HomePage() {
       {featuredProducts.length > 0 && (
         <section className="mx-auto w-full max-w-6xl px-4">
           <Reveal className="mb-6 flex items-center justify-between">
-            <h2 className="font-heading text-xl font-semibold sm:text-2xl">
+            <h2 className="font-heading text-xl font-extrabold sm:text-2xl">
               Mais procurados
             </h2>
             <Link
               href="/loja"
-              className="text-sm text-muted-foreground hover:text-primary"
+              className="text-sm font-bold text-muted-foreground hover:text-primary"
             >
               Ver todos
             </Link>
@@ -155,7 +155,7 @@ export default async function HomePage() {
               <h2 className="max-w-xl font-heading text-2xl font-extrabold sm:text-3xl">
                 Não achou o que procura? Não se preocupe!
               </h2>
-              <p className="max-w-lg text-sm text-background/80 sm:text-base">
+              <p className="max-w-lg text-sm font-semibold text-background/80 sm:text-base">
                 Conte pra gente o produto que você quer e a gente cuida de
                 trazer sob encomenda — rápido, seguro e sem complicação.
               </p>
