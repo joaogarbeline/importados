@@ -28,8 +28,10 @@ export async function loginAction(
   }
 
   const session = await auth();
+  // Admin sempre cai no painel administrativo, mesmo que o login tenha sido
+  // acionado a partir de um callbackUrl de outra área (ex: /minha-conta).
   const destination =
-    callbackUrl || (session?.user.role === "ADMIN" ? "/admin" : "/minha-conta");
+    session?.user.role === "ADMIN" ? "/admin" : callbackUrl || "/minha-conta";
 
   redirect(destination);
 }

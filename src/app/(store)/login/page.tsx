@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 import { LoginForm } from "@/components/storefront/login-form";
 
 export default async function LoginPage({
@@ -7,6 +9,13 @@ export default async function LoginPage({
   searchParams: Promise<{ callbackUrl?: string }>;
 }) {
   const { callbackUrl } = await searchParams;
+
+  const session = await auth();
+  if (session?.user) {
+    // Já autenticado: admin sempre vai pro painel, independente do
+    // callbackUrl que trouxe até aqui.
+    redirect(session.user.role === "ADMIN" ? "/admin" : callbackUrl || "/minha-conta");
+  }
 
   return (
     <div className="mx-auto flex w-full max-w-sm flex-col gap-6 px-4 py-16">
