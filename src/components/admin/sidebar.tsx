@@ -13,6 +13,7 @@ import {
   Images,
   Star,
   Contact,
+  CreditCard,
 } from "lucide-react";
 
 type NavItem = {
@@ -38,6 +39,7 @@ const NAV_GROUPS: { label: string | null; items: NavItem[] }[] = [
     label: "Vendas",
     items: [
       { href: "/admin/pedidos", label: "Pedidos", icon: ShoppingCart },
+      { href: "/admin/pagamentos", label: "Pagamentos", icon: CreditCard },
       { href: "/admin/financeiro", label: "Financeiro", icon: Wallet },
     ],
   },

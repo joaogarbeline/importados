@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { PlusIcon } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import {
   Table,
@@ -8,8 +10,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserSearchInput } from "@/components/admin/user-search-input";
+import { cn } from "@/lib/utils";
 
 export default async function AdminUsersPage({
   searchParams,
@@ -33,12 +37,18 @@ export default async function AdminUsersPage({
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="font-heading text-2xl font-extrabold tracking-tight">Equipe</h1>
-        <p className="text-sm font-semibold text-muted-foreground">
-          Contas administrativas e de clientes cadastradas no sistema. Para o
-          relacionamento com clientes, use a seção Clientes.
-        </p>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h1 className="font-heading text-2xl font-extrabold tracking-tight">Equipe</h1>
+          <p className="text-sm font-semibold text-muted-foreground">
+            Contas administrativas e de clientes cadastradas no sistema. Para
+            o relacionamento com clientes, use a seção Clientes.
+          </p>
+        </div>
+        <Link href="/admin/usuarios/novo" className={cn(buttonVariants())}>
+          <PlusIcon className="size-4" />
+          Novo usuário
+        </Link>
       </div>
 
       <Card>
@@ -63,7 +73,11 @@ export default async function AdminUsersPage({
             <TableBody>
               {users.map((user) => (
                 <TableRow key={user.id}>
-                  <TableCell>{user.name}</TableCell>
+                  <TableCell>
+                    <Link href={`/admin/usuarios/${user.id}`} className="font-bold hover:underline">
+                      {user.name}
+                    </Link>
+                  </TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.phone ?? "-"}</TableCell>
                   <TableCell>

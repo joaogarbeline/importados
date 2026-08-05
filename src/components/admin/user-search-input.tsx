@@ -5,7 +5,13 @@ import { useState, useTransition } from "react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 
-export function UserSearchInput({ defaultValue }: { defaultValue: string }) {
+export function UserSearchInput({
+  defaultValue,
+  placeholder = "Buscar por nome ou e-mail...",
+}: {
+  defaultValue: string;
+  placeholder?: string;
+}) {
   const [value, setValue] = useState(defaultValue);
   const router = useRouter();
   const pathname = usePathname();
@@ -31,7 +37,7 @@ export function UserSearchInput({ defaultValue }: { defaultValue: string }) {
       <Input
         value={value}
         onChange={(e) => handleChange(e.target.value)}
-        placeholder="Buscar por nome ou e-mail..."
+        placeholder={placeholder}
         className="pl-8"
       />
     </div>
