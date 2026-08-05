@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { UploadIcon, XIcon, Loader2Icon } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 
 export function ImageUploadField({
   name,
@@ -19,6 +20,7 @@ export function ImageUploadField({
   const [images, setImages] = useState<string[]>(defaultValue ?? []);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [dragOver, setDragOver] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   async function handleFiles(files: FileList | null) {
@@ -74,15 +76,30 @@ export function ImageUploadField({
           <button
             type="button"
             onClick={() => inputRef.current?.click()}
+            onDragOver={(e) => {
+              e.preventDefault();
+              setDragOver(true);
+            }}
+            onDragLeave={() => setDragOver(false)}
+            onDrop={(e) => {
+              e.preventDefault();
+              setDragOver(false);
+              handleFiles(e.dataTransfer.files);
+            }}
             disabled={uploading}
-            className="flex size-20 shrink-0 flex-col items-center justify-center gap-1 rounded-lg border border-dashed text-muted-foreground transition-colors hover:border-primary hover:text-primary disabled:opacity-50"
+            className={cn(
+              "flex size-20 shrink-0 flex-col items-center justify-center gap-1 rounded-lg border border-dashed text-muted-foreground transition-colors hover:border-primary hover:text-primary disabled:opacity-50",
+              dragOver && "border-primary bg-primary/5 text-primary"
+            )}
           >
             {uploading ? (
               <Loader2Icon className="size-5 animate-spin" />
             ) : (
               <UploadIcon className="size-5" />
             )}
-            <span className="text-[10px]">Enviar</span>
+            <span className="text-[10px] font-bold">
+              {dragOver ? "Solte aqui" : "Arraste ou clique"}
+            </span>
           </button>
         )}
       </div>
