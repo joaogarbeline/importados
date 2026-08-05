@@ -15,15 +15,15 @@ export function TiltCard({
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [8, -8]), {
-    stiffness: 250,
-    damping: 22,
+  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [3, -3]), {
+    stiffness: 260,
+    damping: 26,
   });
-  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-8, 8]), {
-    stiffness: 250,
-    damping: 22,
+  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-3, 3]), {
+    stiffness: 260,
+    damping: 26,
   });
-  const scale = useSpring(1, { stiffness: 250, damping: 22 });
+  const scale = useSpring(1, { stiffness: 260, damping: 26 });
 
   function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
     const rect = ref.current?.getBoundingClientRect();

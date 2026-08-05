@@ -81,13 +81,25 @@ model Product {
   description String
   images      String[]
   price       Decimal  @db.Decimal(10, 2)
+  costPrice   Decimal? @db.Decimal(10, 2)
   sku         String   @unique
+  barcode     String?  @unique
   stockQty    Int      @default(0)
   isPreOrder  Boolean  @default(true)
   category    String
   active      Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+
+  brand    String?
+  model    String?
+  color    String?
+  capacity String?
+  warranty String?
+
+  metaTitle       String?
+  metaDescription String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   orderItems     OrderItem[]
   stockMovements StockMovement[]
@@ -205,4 +217,16 @@ model Banner {
   updatedAt DateTime @updatedAt
 
   @@index([active, order])
+}
+
+model Expense {
+  id          String   @id @default(cuid())
+  description String
+  category    String
+  amount      Decimal  @db.Decimal(10, 2)
+  date        DateTime @default(now())
+  createdAt   DateTime @default(now())
+
+  @@index([date])
+  @@index([category])
 }

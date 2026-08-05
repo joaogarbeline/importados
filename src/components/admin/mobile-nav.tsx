@@ -15,9 +15,9 @@ export function AdminMobileNav() {
       <SheetTrigger render={<Button variant="ghost" size="icon" className="md:hidden" />}>
         <Menu className="size-5" />
       </SheetTrigger>
-      <SheetContent side="left" className="w-64 p-0">
+      <SheetContent side="left" className="dark w-64 gap-0 bg-sidebar p-0 text-sidebar-foreground">
         <SheetTitle className="sr-only">Menu</SheetTitle>
-        <div className="border-b px-4 py-4">
+        <div className="border-b border-sidebar-border px-4 py-4">
           <Logo tagline="Painel administrativo" />
         </div>
         <div onClick={() => setOpen(false)}>

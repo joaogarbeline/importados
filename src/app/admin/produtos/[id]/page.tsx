@@ -18,8 +18,10 @@ export default async function EditarProdutoPage({
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="font-heading text-2xl font-bold">Editar produto</h1>
-        <p className="text-sm text-muted-foreground">{product.name}</p>
+        <h1 className="font-heading text-2xl font-extrabold tracking-tight">
+          Editar produto
+        </h1>
+        <p className="text-sm font-semibold text-muted-foreground">{product.name}</p>
       </div>
 
       <ProductForm
@@ -30,12 +32,21 @@ export default async function EditarProdutoPage({
           slug: product.slug,
           description: product.description,
           price: product.price.toString(),
+          costPrice: product.costPrice ? product.costPrice.toString() : "",
           sku: product.sku,
+          barcode: product.barcode,
           category: product.category,
           stockQty: product.stockQty,
           isPreOrder: product.isPreOrder,
           active: product.active,
           images: product.images,
+          brand: product.brand,
+          model: product.model,
+          color: product.color,
+          capacity: product.capacity,
+          warranty: product.warranty,
+          metaTitle: product.metaTitle,
+          metaDescription: product.metaDescription,
         }}
       />
     </div>

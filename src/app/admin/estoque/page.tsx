@@ -27,8 +27,8 @@ export default async function AdminEstoquePage() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="font-heading text-2xl font-bold">Estoque</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="font-heading text-2xl font-extrabold tracking-tight">Estoque</h1>
+        <p className="text-sm font-semibold text-muted-foreground">
           Ao adicionar estoque, os pedidos pendentes são liberados
           automaticamente para pagamento por ordem de chegada, e o cliente é
           avisado por e-mail.
@@ -69,14 +69,14 @@ export default async function AdminEstoquePage() {
                   <TableCell
                     className={
                       movement.qtyChange >= 0
-                        ? "tabular-nums text-emerald-600"
-                        : "tabular-nums text-destructive"
+                        ? "tabular-nums font-bold text-success"
+                        : "tabular-nums font-bold text-destructive"
                     }
                   >
                     {movement.qtyChange >= 0 ? "+" : ""}
                     {movement.qtyChange}
                   </TableCell>
-                  <TableCell className="max-w-[320px] truncate text-muted-foreground">
+                  <TableCell className="max-w-[320px] truncate font-semibold text-muted-foreground">
                     {movement.reason}
                   </TableCell>
                   <TableCell>

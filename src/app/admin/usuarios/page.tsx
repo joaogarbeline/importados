@@ -34,9 +34,10 @@ export default async function AdminUsersPage({
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="font-heading text-2xl font-bold">Usuários</h1>
-        <p className="text-sm text-muted-foreground">
-          Clientes e administradores cadastrados na loja.
+        <h1 className="font-heading text-2xl font-extrabold tracking-tight">Equipe</h1>
+        <p className="text-sm font-semibold text-muted-foreground">
+          Contas administrativas e de clientes cadastradas no sistema. Para o
+          relacionamento com clientes, use a seção Clientes.
         </p>
       </div>
 

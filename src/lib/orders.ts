@@ -81,6 +81,38 @@ export async function addStock(
 }
 
 /**
+ * Registra uma saída manual de estoque (perda, avaria, ajuste de inventário
+ * etc.). Diferente de `addStock`, nunca libera pedidos pendentes.
+ */
+export async function removeStock(
+  productId: string,
+  qtyRemoved: number,
+  reason: string
+) {
+  if (qtyRemoved <= 0) {
+    throw new Error("A quantidade removida deve ser positiva");
+  }
+
+  const product = await prisma.product.findUniqueOrThrow({
+    where: { id: productId },
+  });
+
+  if (product.stockQty - qtyRemoved < 0) {
+    throw new Error("Estoque insuficiente para essa saída");
+  }
+
+  await prisma.$transaction([
+    prisma.product.update({
+      where: { id: productId },
+      data: { stockQty: { decrement: qtyRemoved } },
+    }),
+    prisma.stockMovement.create({
+      data: { productId, qtyChange: -qtyRemoved, reason },
+    }),
+  ]);
+}
+
+/**
  * Aloca estoque para pedidos pendentes por ordem de chegada (FIFO) e libera
  * o pagamento (Preference Mercado Pago + e-mail) de todo pedido cujos itens
  * ficaram 100% alocados.

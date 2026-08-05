@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
   SelectContent,
@@ -27,6 +28,7 @@ export function AddStockForm({
     initialState
   );
   const [productId, setProductId] = useState<string | null>(null);
+  const [type, setType] = useState<"entrada" | "saida">("entrada");
 
   return (
     <form action={formAction} className="flex max-w-lg flex-col gap-4">
@@ -40,6 +42,14 @@ export function AddStockForm({
           <AlertDescription>{state.success}</AlertDescription>
         </Alert>
       )}
+
+      <Tabs value={type} onValueChange={(v) => setType(v as "entrada" | "saida")}>
+        <TabsList>
+          <TabsTrigger value="entrada">Entrada</TabsTrigger>
+          <TabsTrigger value="saida">Saída / ajuste</TabsTrigger>
+        </TabsList>
+      </Tabs>
+      <input type="hidden" name="type" value={type} />
 
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="productId">Produto</Label>
@@ -58,7 +68,9 @@ export function AddStockForm({
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="qty">Quantidade recebida</Label>
+        <Label htmlFor="qty">
+          {type === "entrada" ? "Quantidade recebida" : "Quantidade retirada"}
+        </Label>
         <Input id="qty" name="qty" type="number" min="1" required />
       </div>
 
@@ -68,14 +80,22 @@ export function AddStockForm({
           id="reason"
           name="reason"
           rows={2}
-          placeholder="Ex: Chegada do fornecedor XYZ"
+          placeholder={
+            type === "entrada"
+              ? "Ex: Chegada do fornecedor XYZ"
+              : "Ex: Avaria, perda ou ajuste de inventário"
+          }
           required
         />
       </div>
 
       <div>
         <Button type="submit" disabled={pending || !productId}>
-          {pending ? "Adicionando..." : "Adicionar ao estoque"}
+          {pending
+            ? "Salvando..."
+            : type === "entrada"
+              ? "Adicionar ao estoque"
+              : "Registrar saída"}
         </Button>
       </div>
     </form>

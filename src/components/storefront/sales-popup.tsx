@@ -87,7 +87,7 @@ export function SalesPopup() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="pointer-events-auto flex w-full max-w-xs items-center gap-3 rounded-xl border border-white/10 bg-card/95 p-3 shadow-xl shadow-black/20 backdrop-blur"
+            className="pointer-events-auto flex w-full max-w-xs items-center gap-3 rounded-xl border border-border bg-card/95 p-3 shadow-xl shadow-black/10 backdrop-blur"
           >
             <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
               <ShoppingBagIcon className="size-4" />

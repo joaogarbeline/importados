@@ -11,7 +11,7 @@ import {
 } from "recharts";
 import { formatBRL } from "@/lib/money";
 
-const SEQUENTIAL_BLUE = "#2a78d6";
+const SEQUENTIAL_BLUE = "#2563eb";
 
 export function RevenueChart({
   data,

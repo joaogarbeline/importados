@@ -5,8 +5,10 @@ export default function NovoProdutoPage() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="font-heading text-2xl font-bold">Novo produto</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="font-heading text-2xl font-extrabold tracking-tight">
+          Novo produto
+        </h1>
+        <p className="text-sm font-semibold text-muted-foreground">
           Cadastre um novo produto no catálogo da loja.
         </p>
       </div>

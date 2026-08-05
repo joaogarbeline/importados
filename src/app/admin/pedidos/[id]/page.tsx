@@ -1,15 +1,18 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { CheckIcon } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { formatBRL } from "@/lib/money";
 import {
   OrderStatusBadge,
   PaymentStatusBadge,
+  orderStatusLabel,
 } from "@/components/admin/status-badges";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { PrintButton } from "@/components/admin/print-button";
 import {
   Table,
   TableBody,
@@ -18,6 +21,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
+import type { OrderStatus } from "@/generated/prisma/enums";
 import {
   resendLinkAction,
   cancelOrderAction,
@@ -25,6 +30,75 @@ import {
   markShippedAction,
   markDeliveredAction,
 } from "@/app/admin/pedidos/actions";
+
+const PIPELINE: OrderStatus[] = [
+  "AGUARDANDO_ESTOQUE",
+  "LIBERADO_PARA_PAGAMENTO",
+  "AGUARDANDO_PAGAMENTO",
+  "PAGO",
+  "EM_PREPARACAO",
+  "ENVIADO",
+  "ENTREGUE",
+];
+
+function OrderTimeline({ status }: { status: OrderStatus }) {
+  const isTerminalBad = status === "CANCELADO" || status === "PAGAMENTO_EXPIRADO";
+  const currentIndex = PIPELINE.indexOf(status);
+
+  return (
+    <div className="flex flex-col">
+      {PIPELINE.map((step, i) => {
+        const done = !isTerminalBad && i <= currentIndex;
+        const isCurrent = !isTerminalBad && i === currentIndex;
+        const isLast = i === PIPELINE.length - 1;
+        return (
+          <div key={step} className="flex gap-3">
+            <div className="flex flex-col items-center">
+              <span
+                className={cn(
+                  "flex size-6 shrink-0 items-center justify-center rounded-full border-2 text-[10px] font-extrabold",
+                  done
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : "border-border bg-background text-muted-foreground"
+                )}
+              >
+                {done ? <CheckIcon className="size-3.5" /> : i + 1}
+              </span>
+              {!isLast && (
+                <span
+                  className={cn(
+                    "min-h-6 w-0.5 flex-1",
+                    i < currentIndex && !isTerminalBad ? "bg-primary" : "bg-border"
+                  )}
+                />
+              )}
+            </div>
+            <div className={cn("pb-6", isLast && "pb-0")}>
+              <p
+                className={cn(
+                  "text-sm",
+                  isCurrent
+                    ? "font-extrabold text-foreground"
+                    : done
+                      ? "font-bold text-foreground"
+                      : "font-semibold text-muted-foreground"
+                )}
+              >
+                {orderStatusLabel(step)}
+              </p>
+            </div>
+          </div>
+        );
+      })}
+
+      {isTerminalBad && (
+        <div className="mt-2 rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm font-bold text-destructive">
+          {status === "CANCELADO" ? "Pedido cancelado" : "Pagamento expirado"}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default async function AdminOrderDetailPage({
   params,
@@ -57,10 +131,10 @@ export default async function AdminOrderDetailPage({
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-heading text-2xl font-bold">
+          <h1 className="font-heading text-2xl font-extrabold tracking-tight">
             Pedido #{order.id.slice(-8).toUpperCase()}
           </h1>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm font-semibold text-muted-foreground">
             Criado em{" "}
             {new Intl.DateTimeFormat("pt-BR", {
               dateStyle: "short",
@@ -68,7 +142,10 @@ export default async function AdminOrderDetailPage({
             }).format(order.createdAt)}
           </p>
         </div>
-        <OrderStatusBadge status={order.status} />
+        <div className="flex items-center gap-2">
+          <PrintButton />
+          <OrderStatusBadge status={order.status} />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
@@ -103,7 +180,7 @@ export default async function AdminOrderDetailPage({
                     </TableCell>
                     <TableCell>
                       {item.stockAllocated ? (
-                        <Badge variant="secondary">Sim</Badge>
+                        <Badge variant="success">Sim</Badge>
                       ) : (
                         <Badge variant="outline">Aguardando</Badge>
                       )}
@@ -116,16 +193,12 @@ export default async function AdminOrderDetailPage({
             <div className="flex justify-end text-sm">
               <div className="w-48 space-y-1">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Subtotal</span>
-                  <span className="tabular-nums">
-                    {formatBRL(Number(order.subtotal))}
-                  </span>
+                  <span className="font-semibold text-muted-foreground">Subtotal</span>
+                  <span className="tabular-nums">{formatBRL(Number(order.subtotal))}</span>
                 </div>
-                <div className="flex justify-between font-semibold">
+                <div className="flex justify-between font-extrabold">
                   <span>Total</span>
-                  <span className="tabular-nums">
-                    {formatBRL(Number(order.total))}
-                  </span>
+                  <span className="tabular-nums">{formatBRL(Number(order.total))}</span>
                 </div>
               </div>
             </div>
@@ -135,10 +208,23 @@ export default async function AdminOrderDetailPage({
         <div className="flex flex-col gap-4">
           <Card>
             <CardHeader>
+              <CardTitle className="text-base">Status do pedido</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <OrderTimeline status={order.status} />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
               <CardTitle className="text-base">Cliente</CardTitle>
             </CardHeader>
             <CardContent className="space-y-1 text-sm">
-              <p className="font-medium">{order.user.name}</p>
+              <p className="font-bold">
+                <Link href={`/admin/clientes/${order.userId}`} className="hover:underline">
+                  {order.user.name}
+                </Link>
+              </p>
               <p className="text-muted-foreground">{order.user.email}</p>
               {order.user.phone && (
                 <p className="text-muted-foreground">{order.user.phone}</p>
@@ -167,7 +253,7 @@ export default async function AdminOrderDetailPage({
             </Card>
           )}
 
-          <Card>
+          <Card className="no-print">
             <CardHeader>
               <CardTitle className="text-base">Ações</CardTitle>
             </CardHeader>
@@ -208,7 +294,7 @@ export default async function AdminOrderDetailPage({
                 </form>
               )}
               {!canCancel && !canResendLink && !canMarkPreparing && !canMarkShipped && !canMarkDelivered && (
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm font-semibold text-muted-foreground">
                   Nenhuma ação disponível para este status.
                 </p>
               )}
@@ -217,7 +303,7 @@ export default async function AdminOrderDetailPage({
         </div>
       </div>
 
-      <Card>
+      <Card className="no-print">
         <CardHeader>
           <CardTitle className="text-base">Histórico de pagamentos</CardTitle>
         </CardHeader>
