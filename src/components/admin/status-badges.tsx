@@ -88,3 +88,8 @@ export const ORDER_STATUS_OPTIONS = Object.entries(ORDER_STATUS_LABEL) as [
   OrderStatus,
   string,
 ][];
+
+export const PAYMENT_STATUS_OPTIONS = Object.entries(PAYMENT_STATUS_LABEL) as [
+  PaymentStatus,
+  string,
+][];

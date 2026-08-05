@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { PrintButton } from "@/components/admin/print-button";
+import { PaymentActions } from "@/components/admin/payment-actions";
 import {
   Table,
   TableBody,
@@ -316,6 +317,7 @@ export default async function AdminOrderDetailPage({
                 <TableHead>Método</TableHead>
                 <TableHead>Preference / ID</TableHead>
                 <TableHead>Data</TableHead>
+                <TableHead className="no-print text-right">Ações</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -337,11 +339,18 @@ export default async function AdminOrderDetailPage({
                       timeStyle: "short",
                     }).format(payment.createdAt)}
                   </TableCell>
+                  <TableCell className="no-print text-right">
+                    <PaymentActions
+                      paymentId={payment.id}
+                      status={payment.status}
+                      hasMpPaymentId={Boolean(payment.mpPaymentId)}
+                    />
+                  </TableCell>
                 </TableRow>
               ))}
               {order.payments.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center text-muted-foreground">
+                  <TableCell colSpan={6} className="text-center text-muted-foreground">
                     Nenhum pagamento gerado ainda.
                   </TableCell>
                 </TableRow>

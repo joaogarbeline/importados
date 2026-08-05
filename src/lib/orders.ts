@@ -1,10 +1,76 @@
 import { prisma } from "@/lib/prisma";
-import { getMpPreference } from "@/lib/mercadopago";
+import { getMpPreference, getMpPayment } from "@/lib/mercadopago";
 import {
   sendOrderCreatedEmail,
   sendPaymentReleasedEmail,
+  sendPaymentConfirmedEmail,
   sendOrderCancelledEmail,
 } from "@/lib/emails";
+import type { PaymentStatus } from "@/generated/prisma/enums";
+
+export function mapMpPaymentStatus(mpStatus: string | undefined): PaymentStatus {
+  switch (mpStatus) {
+    case "approved":
+      return "APROVADO";
+    case "rejected":
+      return "RECUSADO";
+    case "cancelled":
+      return "CANCELADO";
+    case "refunded":
+    case "charged_back":
+      return "ESTORNADO";
+    default:
+      return "PENDENTE";
+  }
+}
+
+/**
+ * Busca o pagamento na API do Mercado Pago e aplica o status no banco,
+ * incluindo a liberação do pedido para PAGO e o e-mail de confirmação.
+ * Usado tanto pelo webhook quanto pela sincronização manual no admin.
+ */
+export async function syncPaymentFromMercadoPago(mpPaymentId: string) {
+  const payment = await getMpPayment().get({ id: mpPaymentId });
+  const orderId = payment.external_reference;
+  if (!orderId) return null;
+
+  const order = await prisma.order.findUnique({ where: { id: orderId } });
+  if (!order) return null;
+
+  const status = mapMpPaymentStatus(payment.status);
+
+  await prisma.payment.upsert({
+    where: { mpPaymentId: String(mpPaymentId) },
+    update: {
+      status,
+      method: payment.payment_type_id,
+      rawPayload: payment as unknown as object,
+    },
+    create: {
+      orderId: order.id,
+      mpPaymentId: String(mpPaymentId),
+      status,
+      method: payment.payment_type_id,
+      amount: payment.transaction_amount ?? Number(order.total),
+      rawPayload: payment as unknown as object,
+    },
+  });
+
+  if (status === "APROVADO" && order.status !== "PAGO") {
+    await prisma.order.update({
+      where: { id: order.id },
+      data: { status: "PAGO", paidAt: new Date() },
+    });
+    await sendPaymentConfirmedEmail(order.id);
+  } else if (status === "PENDENTE" && order.status === "LIBERADO_PARA_PAGAMENTO") {
+    await prisma.order.update({
+      where: { id: order.id },
+      data: { status: "AGUARDANDO_PAGAMENTO" },
+    });
+  }
+
+  return status;
+}
 
 export async function createOrder(input: {
   userId: string;
