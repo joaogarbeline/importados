@@ -87,6 +87,7 @@ model Product {
   stockQty    Int      @default(0)
   isPreOrder  Boolean  @default(true)
   category    String
+  subcategory String?
   active      Boolean  @default(true)
 
   brand    String?
@@ -106,6 +107,7 @@ model Product {
   reviews        Review[]
 
   @@index([category])
+  @@index([category, subcategory])
   @@index([active])
 }
 

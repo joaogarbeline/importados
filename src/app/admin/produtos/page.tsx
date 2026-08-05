@@ -235,7 +235,16 @@ export default async function AdminProductsPage({
                       <TableCell className="text-muted-foreground">
                         {product.brand ?? "-"}
                       </TableCell>
-                      <TableCell>{product.category}</TableCell>
+                      <TableCell>
+                        <div className="flex flex-col">
+                          <span>{product.category}</span>
+                          {product.subcategory && (
+                            <span className="text-xs font-semibold text-muted-foreground">
+                              {product.subcategory}
+                            </span>
+                          )}
+                        </div>
+                      </TableCell>
                       <TableCell className="tabular-nums">{formatBRL(product.price)}</TableCell>
                       <TableCell
                         className={cn(

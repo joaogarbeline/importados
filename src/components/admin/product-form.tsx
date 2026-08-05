@@ -20,6 +20,7 @@ type ProductDefaults = {
   sku: string;
   barcode: string | null;
   category: string;
+  subcategory: string | null;
   stockQty: number;
   isPreOrder: boolean;
   active: boolean;
@@ -57,10 +58,14 @@ export function ProductForm({
   action,
   defaultValues,
   submitLabel,
+  categoryOptions = [],
+  subcategoryOptions = [],
 }: {
   action: (state: ProductFormState, formData: FormData) => Promise<ProductFormState>;
   defaultValues?: Partial<ProductDefaults>;
   submitLabel: string;
+  categoryOptions?: string[];
+  subcategoryOptions?: string[];
 }) {
   const [state, formAction, pending] = useActionState(action, {});
   const [price, setPrice] = useState(defaultValues?.price ?? "");
@@ -103,9 +108,41 @@ export function ProductForm({
             </Field>
           </div>
 
-          <Field label="Categoria" htmlFor="category" error={fe?.category}>
-            <Input id="category" name="category" defaultValue={defaultValues?.category} required />
-          </Field>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Field label="Categoria" htmlFor="category" error={fe?.category}>
+              <Input
+                id="category"
+                name="category"
+                list="category-options"
+                defaultValue={defaultValues?.category}
+                required
+              />
+              <datalist id="category-options">
+                {categoryOptions.map((c) => (
+                  <option key={c} value={c} />
+                ))}
+              </datalist>
+            </Field>
+            <Field label="Subcategoria" htmlFor="subcategory">
+              <Input
+                id="subcategory"
+                name="subcategory"
+                list="subcategory-options"
+                placeholder="Opcional"
+                defaultValue={defaultValues?.subcategory ?? ""}
+              />
+              <datalist id="subcategory-options">
+                {subcategoryOptions.map((c) => (
+                  <option key={c} value={c} />
+                ))}
+              </datalist>
+            </Field>
+          </div>
+          <p className="-mt-2 text-xs font-semibold text-muted-foreground">
+            A loja organiza os produtos por categoria e, dentro dela, por
+            subcategoria. Use os mesmos nomes entre produtos para agrupá-los
+            corretamente.
+          </p>
 
           <Field label="Descrição" htmlFor="description" error={fe?.description}>
             <Textarea

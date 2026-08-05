@@ -18,7 +18,7 @@ export default async function LojaPage({
         active: true,
         ...(categoria ? { category: categoria } : {}),
       },
-      orderBy: { createdAt: "desc" },
+      orderBy: [{ category: "asc" }, { subcategory: "asc" }, { createdAt: "desc" }],
       include: { reviews: { select: { rating: true } } },
     }),
     prisma.product.findMany({
@@ -31,9 +31,22 @@ export default async function LojaPage({
 
   const categories = categoryRows.map((c) => c.category);
 
+  // Agrupa por categoria e, dentro dela, por subcategoria (produtos sem
+  // subcategoria caem em um grupo "Outros" só quando a categoria tem
+  // subcategorias definidas — senão a grade aparece direto).
+  const grouped = new Map<string, Map<string, typeof products>>();
+  for (const product of products) {
+    const catGroup = grouped.get(product.category) ?? new Map();
+    const subKey = product.subcategory ?? "__none__";
+    const subGroup = catGroup.get(subKey) ?? [];
+    subGroup.push(product);
+    catGroup.set(subKey, subGroup);
+    grouped.set(product.category, catGroup);
+  }
+
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-10">
-      <h1 className="font-heading text-3xl font-extrabold tracking-tight">
+    <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:py-10">
+      <h1 className="font-heading text-2xl font-extrabold tracking-tight sm:text-3xl">
         Loja
       </h1>
       <p className="mt-1.5 max-w-xl text-sm font-semibold text-muted-foreground">
@@ -76,14 +89,39 @@ export default async function LojaPage({
           Nenhum produto encontrado.
         </p>
       ) : (
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {products.map((product, i) => (
-            <ProductCard
-              key={product.slug}
-              product={product}
-              delay={(i % 6) * 0.05}
-            />
-          ))}
+        <div className="mt-8 flex flex-col gap-10 sm:gap-12">
+          {Array.from(grouped.entries()).map(([category, subGroups]) => {
+            const hasNamedSubcategories = Array.from(subGroups.keys()).some(
+              (k) => k !== "__none__"
+            );
+
+            return (
+              <section key={category} className="flex flex-col gap-6">
+                <h2 className="font-heading text-lg font-extrabold tracking-tight sm:text-xl">
+                  {category}
+                </h2>
+
+                {Array.from(subGroups.entries()).map(([subKey, items]) => (
+                  <div key={subKey} className="flex flex-col gap-3">
+                    {hasNamedSubcategories && (
+                      <h3 className="text-xs font-extrabold tracking-wide text-muted-foreground uppercase">
+                        {subKey === "__none__" ? "Outros" : subKey}
+                      </h3>
+                    )}
+                    <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3">
+                      {items.map((product, i) => (
+                        <ProductCard
+                          key={product.slug}
+                          product={product}
+                          delay={(i % 6) * 0.05}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </section>
+            );
+          })}
         </div>
       )}
     </div>

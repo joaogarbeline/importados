@@ -43,8 +43,8 @@ export function ProductCard({
                 />
               ) : null}
 
-              <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-2.5">
-                <span className="rounded-full bg-background/85 px-2 py-1 text-[10px] font-extrabold tracking-wide uppercase text-foreground backdrop-blur">
+              <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-1.5 p-1.5 sm:gap-2 sm:p-2.5">
+                <span className="rounded-full bg-background/85 px-1.5 py-0.5 text-[9px] font-extrabold tracking-wide uppercase text-foreground backdrop-blur sm:px-2 sm:py-1 sm:text-[10px]">
                   {product.category}
                 </span>
                 {stock.isPreOrder ? (
@@ -57,25 +57,26 @@ export function ProductCard({
                     className="shrink-0 gap-1 border-destructive/30 bg-destructive text-destructive-foreground shadow-sm"
                   >
                     <FlameIcon className="size-3" />
-                    Últimas unidades
+                    <span className="hidden sm:inline">Últimas unidades</span>
+                    <span className="sm:hidden">Últimas</span>
                   </Badge>
                 ) : null}
               </div>
 
-              <div className="absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/75 via-black/0 to-black/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+              <div className="absolute inset-0 hidden items-end justify-center bg-gradient-to-t from-black/75 via-black/0 to-black/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 sm:flex">
                 <span className="glow-primary mb-3 inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground">
                   Ver produto <ArrowUpRightIcon className="size-3.5" />
                 </span>
               </div>
             </div>
 
-            <CardContent className="flex flex-col gap-1.5 p-4">
-              <span className="line-clamp-1 font-extrabold tracking-tight">
+            <CardContent className="flex flex-col gap-1 p-2.5 sm:gap-1.5 sm:p-4">
+              <span className="line-clamp-2 text-sm font-extrabold tracking-tight sm:line-clamp-1 sm:text-base">
                 {product.name}
               </span>
 
               {product.reviews.length > 0 && (
-                <div className="flex items-center gap-1.5">
+                <div className="hidden items-center gap-1.5 sm:flex">
                   <RatingStars rating={averageRating(product.reviews)} />
                   <span className="text-xs font-bold text-muted-foreground">
                     ({product.reviews.length})
@@ -83,32 +84,30 @@ export function ProductCard({
                 </div>
               )}
 
-              <div className="mt-0.5 flex items-center justify-between gap-2">
-                <span className="text-gradient-brand text-lg font-black">
-                  {formatBRL(product.price)}
-                </span>
+              <span className="text-gradient-brand text-base font-black sm:text-lg">
+                {formatBRL(product.price)}
+              </span>
 
-                {!stock.isPreOrder && (
+              {!stock.isPreOrder && (
+                <span
+                  className={
+                    "flex items-center gap-1 text-[10px] font-bold sm:text-[11px] " +
+                    (stock.isLow
+                      ? "text-destructive"
+                      : "text-muted-foreground")
+                  }
+                >
                   <span
                     className={
-                      "flex items-center gap-1 text-[11px] font-bold " +
+                      "stock-dot size-1.5 rounded-full " +
                       (stock.isLow
-                        ? "text-destructive"
-                        : "text-muted-foreground")
+                        ? "bg-destructive pulse-dot"
+                        : "bg-emerald-500")
                     }
-                  >
-                    <span
-                      className={
-                        "stock-dot size-1.5 rounded-full " +
-                        (stock.isLow
-                          ? "bg-destructive pulse-dot"
-                          : "bg-emerald-500")
-                      }
-                    />
-                    {stock.isLow ? `Restam ${stock.stockQty}` : "Em estoque"}
-                  </span>
-                )}
-              </div>
+                  />
+                  {stock.isLow ? `Restam ${stock.stockQty}` : "Em estoque"}
+                </span>
+              )}
             </CardContent>
           </Card>
         </Link>

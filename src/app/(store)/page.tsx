@@ -136,7 +136,7 @@ export default async function HomePage() {
               Ver todos
             </Link>
           </Reveal>
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
             {featuredProducts.map((product, i) => (
               <ProductCard key={product.slug} product={product} delay={i * 0.06} />
             ))}

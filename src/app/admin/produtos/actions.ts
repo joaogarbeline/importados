@@ -18,6 +18,7 @@ const productSchema = z.object({
   sku: z.string().min(1, "Informe o SKU"),
   barcode: z.string().optional(),
   category: z.string().min(1, "Informe a categoria"),
+  subcategory: z.string().optional(),
   stockQty: z.coerce.number().int().min(0, "O estoque não pode ser negativo"),
   isPreOrder: z.coerce.boolean(),
   active: z.coerce.boolean(),
@@ -53,6 +54,7 @@ function readForm(formData: FormData) {
     sku: formData.get("sku"),
     barcode: formData.get("barcode"),
     category: formData.get("category"),
+    subcategory: formData.get("subcategory"),
     stockQty: formData.get("stockQty"),
     isPreOrder: formData.get("isPreOrder") === "on",
     active: formData.get("active") === "on",
@@ -84,8 +86,20 @@ export async function createProductAction(
     return { fieldErrors: parsed.error.flatten().fieldErrors as Record<string, string> };
   }
 
-  const { images, costPrice, barcode, brand, model, color, capacity, warranty, metaTitle, metaDescription, ...data } =
-    parsed.data;
+  const {
+    images,
+    costPrice,
+    barcode,
+    subcategory,
+    brand,
+    model,
+    color,
+    capacity,
+    warranty,
+    metaTitle,
+    metaDescription,
+    ...data
+  } = parsed.data;
 
   try {
     await prisma.product.create({
@@ -94,6 +108,7 @@ export async function createProductAction(
         images: parseImages(images),
         costPrice: costPrice ?? null,
         barcode: emptyToNull(barcode),
+        subcategory: emptyToNull(subcategory),
         brand: emptyToNull(brand),
         model: emptyToNull(model),
         color: emptyToNull(color),
@@ -124,8 +139,20 @@ export async function updateProductAction(
     return { fieldErrors: parsed.error.flatten().fieldErrors as Record<string, string> };
   }
 
-  const { images, costPrice, barcode, brand, model, color, capacity, warranty, metaTitle, metaDescription, ...data } =
-    parsed.data;
+  const {
+    images,
+    costPrice,
+    barcode,
+    subcategory,
+    brand,
+    model,
+    color,
+    capacity,
+    warranty,
+    metaTitle,
+    metaDescription,
+    ...data
+  } = parsed.data;
 
   try {
     await prisma.product.update({
@@ -135,6 +162,7 @@ export async function updateProductAction(
         images: parseImages(images),
         costPrice: costPrice ?? null,
         barcode: emptyToNull(barcode),
+        subcategory: emptyToNull(subcategory),
         brand: emptyToNull(brand),
         model: emptyToNull(model),
         color: emptyToNull(color),

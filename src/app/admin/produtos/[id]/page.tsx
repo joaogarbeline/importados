@@ -10,7 +10,20 @@ export default async function EditarProdutoPage({
 }) {
   const { id } = await params;
 
-  const product = await prisma.product.findUnique({ where: { id } });
+  const [product, categoryRows, subcategoryRows] = await Promise.all([
+    prisma.product.findUnique({ where: { id } }),
+    prisma.product.findMany({
+      distinct: ["category"],
+      select: { category: true },
+      orderBy: { category: "asc" },
+    }),
+    prisma.product.findMany({
+      where: { subcategory: { not: null } },
+      distinct: ["subcategory"],
+      select: { subcategory: true },
+      orderBy: { subcategory: "asc" },
+    }),
+  ]);
   if (!product) notFound();
 
   const boundAction = updateProductAction.bind(null, product.id);
@@ -27,6 +40,10 @@ export default async function EditarProdutoPage({
       <ProductForm
         action={boundAction}
         submitLabel="Salvar alterações"
+        categoryOptions={categoryRows.map((c) => c.category)}
+        subcategoryOptions={subcategoryRows
+          .map((s) => s.subcategory)
+          .filter((s): s is string => Boolean(s))}
         defaultValues={{
           name: product.name,
           slug: product.slug,
@@ -36,6 +53,7 @@ export default async function EditarProdutoPage({
           sku: product.sku,
           barcode: product.barcode,
           category: product.category,
+          subcategory: product.subcategory,
           stockQty: product.stockQty,
           isPreOrder: product.isPreOrder,
           active: product.active,
