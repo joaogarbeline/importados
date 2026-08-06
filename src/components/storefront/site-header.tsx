@@ -6,6 +6,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -51,24 +52,26 @@ export async function SiteHeader() {
                 <UserIcon className="size-4" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  render={<Link href="/minha-conta">Minha conta</Link>}
-                />
-                {user.role === "ADMIN" && (
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
                   <DropdownMenuItem
-                    render={<Link href="/admin">Painel admin</Link>}
+                    render={<Link href="/minha-conta">Minha conta</Link>}
                   />
-                )}
-                <DropdownMenuSeparator />
-                <form action={signOutAction}>
-                  <DropdownMenuItem
-                    render={<button type="submit" className="w-full" />}
-                  >
-                    Sair
-                  </DropdownMenuItem>
-                </form>
+                  {user.role === "ADMIN" && (
+                    <DropdownMenuItem
+                      render={<Link href="/admin">Painel admin</Link>}
+                    />
+                  )}
+                  <DropdownMenuSeparator />
+                  <form action={signOutAction}>
+                    <DropdownMenuItem
+                      render={<button type="submit" className="w-full" />}
+                    >
+                      Sair
+                    </DropdownMenuItem>
+                  </form>
+                </DropdownMenuGroup>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
