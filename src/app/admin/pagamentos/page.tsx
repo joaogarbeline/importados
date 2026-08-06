@@ -52,7 +52,7 @@ export default async function AdminPagamentosPage({
       </div>
 
       <Card>
-        <CardHeader className="flex-row flex-wrap items-center justify-between gap-3">
+        <CardHeader className="flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
           <CardTitle className="text-base">{payments.length} pagamento(s)</CardTitle>
           <div className="flex flex-wrap items-center gap-2">
             <UserSearchInput

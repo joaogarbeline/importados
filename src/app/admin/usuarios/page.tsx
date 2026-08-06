@@ -52,7 +52,7 @@ export default async function AdminUsersPage({
       </div>
 
       <Card>
-        <CardHeader className="flex-row items-center justify-between gap-4">
+        <CardHeader className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
           <CardTitle className="text-base">
             {users.length} usuário(s)
           </CardTitle>

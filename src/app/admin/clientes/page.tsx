@@ -55,7 +55,7 @@ export default async function AdminClientesPage({
       </div>
 
       <Card>
-        <CardHeader className="flex-row items-center justify-between gap-4">
+        <CardHeader className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
           <CardTitle className="text-base">{rows.length} cliente(s)</CardTitle>
           <UserSearchInput defaultValue={q ?? ""} />
         </CardHeader>
