@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { SearchIcon, XIcon } from "lucide-react";
+import { Loader2Icon, SearchIcon, XIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,6 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
+const DEBOUNCE_MS = 400;
 
 export type ShopFiltersDefaults = {
   q: string;
@@ -43,7 +45,23 @@ export function ShopFilters({
   const [q, setQ] = useState(defaults.q);
   const [precoMin, setPrecoMin] = useState(defaults.precoMin);
   const [precoMax, setPrecoMax] = useState(defaults.precoMax);
-  const [, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition();
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Mantém os campos de texto sincronizados quando o filtro muda por fora
+  // (botão voltar do navegador, "Limpar filtros", link direto etc). Ajustado
+  // durante o render, como recomendado, em vez de num useEffect.
+  const [prevDefaults, setPrevDefaults] = useState(defaults);
+  if (
+    prevDefaults.q !== defaults.q ||
+    prevDefaults.precoMin !== defaults.precoMin ||
+    prevDefaults.precoMax !== defaults.precoMax
+  ) {
+    setPrevDefaults(defaults);
+    setQ(defaults.q);
+    setPrecoMin(defaults.precoMin);
+    setPrecoMax(defaults.precoMax);
+  }
 
   function updateParams(next: Record<string, string>) {
     const params = new URLSearchParams(searchParams.toString());
@@ -56,12 +74,26 @@ export function ShopFilters({
     });
   }
 
+  // Campos de digitação livre (busca, preço) só atualizam a URL — e disparam
+  // as queries no servidor — depois que o usuário para de digitar.
+  function updateParamsDebounced(next: Record<string, string>) {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => updateParams(next), DEBOUNCE_MS);
+  }
+
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, []);
+
   function handleCategoriaChange(v: string | null) {
     // Trocar de categoria invalida a subcategoria selecionada anteriormente.
     updateParams({ categoria: v && v !== "todas" ? v : "", subcategoria: "" });
   }
 
   function clearAll() {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
     setQ("");
     setPrecoMin("");
     setPrecoMax("");
@@ -71,7 +103,9 @@ export function ShopFilters({
   }
 
   return (
-    <div className="mt-6 flex flex-col gap-3 rounded-2xl border border-border bg-card/60 p-3 sm:p-4">
+    <div
+      className={`mt-6 flex flex-col gap-3 rounded-2xl border border-border bg-card/60 p-3 transition-opacity sm:p-4 ${isPending ? "opacity-70" : ""}`}
+    >
       <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
         <div className="relative w-full sm:w-56">
           <SearchIcon className="absolute top-2.5 left-2.5 size-4 text-muted-foreground" />
@@ -79,11 +113,29 @@ export function ShopFilters({
             value={q}
             onChange={(e) => {
               setQ(e.target.value);
-              updateParams({ q: e.target.value });
+              updateParamsDebounced({ q: e.target.value });
             }}
             placeholder="Buscar produto..."
-            className="pl-8"
+            className="pl-8 pr-8"
           />
+          {isPending ? (
+            <Loader2Icon className="absolute top-2.5 right-2.5 size-4 animate-spin text-muted-foreground" />
+          ) : (
+            q && (
+              <button
+                type="button"
+                aria-label="Limpar busca"
+                onClick={() => {
+                  if (debounceRef.current) clearTimeout(debounceRef.current);
+                  setQ("");
+                  updateParams({ q: "" });
+                }}
+                className="absolute top-2.5 right-2.5 text-muted-foreground hover:text-foreground"
+              >
+                <XIcon className="size-4" />
+              </button>
+            )
+          )}
         </div>
 
         <Select
@@ -181,7 +233,7 @@ export function ShopFilters({
             value={precoMin}
             onChange={(e) => {
               setPrecoMin(e.target.value);
-              updateParams({ precoMin: e.target.value });
+              updateParamsDebounced({ precoMin: e.target.value });
             }}
             placeholder="Mín."
             className="w-24"
@@ -194,7 +246,7 @@ export function ShopFilters({
             value={precoMax}
             onChange={(e) => {
               setPrecoMax(e.target.value);
-              updateParams({ precoMax: e.target.value });
+              updateParamsDebounced({ precoMax: e.target.value });
             }}
             placeholder="Máx."
             className="w-24"
